@@ -5,9 +5,9 @@ _tabversion = '3.2'
 
 _lr_method = 'LALR'
 
-_lr_signature = 's\xb9\xe1\x9dU\xf4<\xb5\xfa\xfc&\xfc\xee\xa9\xf2\x90'
+_lr_signature = '8\x0c\xed\xc0\xc3FE\x91\x9c\xd2\xd1\x05\xd6\x1c\nD'
     
-_lr_action_items = {'integer':([0,3,],[2,2,]),'plus':([1,2,4,],[3,-2,3,]),'$end':([1,2,4,],[0,-2,-1,]),}
+_lr_action_items = {'integer':([0,3,],[2,2,]),'plus':([1,2,4,],[3,-2,-1,]),'$end':([1,2,4,],[0,-2,-1,]),}
 
 _lr_action = { }
 for _k, _v in _lr_action_items.items():
@@ -26,6 +26,7 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expression","S'",1,None,None,None),
-  ('expression -> expression plus expression','expression',3,'p_expression_plus','main.py',7),
-  ('expression -> integer','expression',1,'p_expression_num','main.py',11),
+  ('expression -> expression plus expression','expression',3,'p_expression_plus','main.py',13),
+  ('expression -> integer','expression',1,'p_expression_num','main.py',18),
+  ('empty -> <empty>','empty',0,'p_empty','main.py',23),
 ]

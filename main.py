@@ -1,23 +1,37 @@
 import ply.yacc as yacc
 import ply.lex as lex
 import sys, os
+import logging
 
 from lexer import Lexer
+
+precedence = (
+    ('left', 'plus', 'minus'),
+    ('left', 'times', 'divide'),
+)
 
 def p_expression_plus(p):
     'expression : expression plus expression'
     print('expression : expression plus expression: {} + {}', p[1], p[3])
-    p[0] = p[1] + p[3]
+    p[0] = (p[1], p[3])
 
 def p_expression_num(p):
 	'expression : integer'
 	print('expression : integer: {}', p[1])
 	p[0] = p[1]
 
+def p_empty(p):
+	'empty :'
+	print('empty :')
+	pass
+
 # Error rule for syntax errors
 def p_error(p):
-    print "Syntax error in input!"
-    exit()
+	if p is None:
+		print "Error is None"
+		exit()
+	print "Error is {}".format(p)
+	exit()
 
 def read_tokens_create_lexer(filename):
 	if os.path.exists(filename):
@@ -58,8 +72,18 @@ if __name__ == '__main__':
 		lexer = read_tokens_create_lexer(lex_fname)
 		tokens = lexer.token_types
 
+		# Setup Logging
+		logging.basicConfig(
+		    level = logging.DEBUG,
+		    filename = "parselog.txt",
+		    filemode = "w",
+		    format = "%(filename)10s:%(lineno)4d:%(message)s"
+		)
+		log = logging.getLogger()		
+
 		# Build the parser
-		parser = yacc.yacc()
+		parser = yacc.yacc(debug=True, debuglog = log)
+		print parser.productions
 
 		while True:
 			# try:

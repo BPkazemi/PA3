@@ -48,6 +48,7 @@ Grammar
 Rule 0     S' -> expression
 Rule 1     expression -> expression plus expression
 Rule 2     expression -> integer
+Rule 3     empty -> <empty>
 
 Terminals, with rules where they appear
 
@@ -97,6 +98,7 @@ while                :
 
 Nonterminals, with rules where they appear
 
+empty                : 
 expression           : 1 1 0
 
 Parsing method: LALR
@@ -142,13 +144,8 @@ state 4
     (1) expression -> expression plus expression .
     (1) expression -> expression . plus expression
 
-  ! shift/reduce conflict for plus resolved as shift
+    plus            reduce using rule 1 (expression -> expression plus expression .)
     $end            reduce using rule 1 (expression -> expression plus expression .)
-    plus            shift and go to state 3
 
-  ! plus            [ reduce using rule 1 (expression -> expression plus expression .) ]
+  ! plus            [ shift and go to state 3 ]
 
-WARNING: 
-WARNING: Conflicts:
-WARNING: 
-WARNING: shift/reduce conflict for plus in state 4 resolved as shift
