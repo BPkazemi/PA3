@@ -4,15 +4,24 @@ import sys, os
 
 from lexer import Lexer
 
+class Node:
+	def __init__(self, type, children=None, leaf=None):
+		self.type = type
+		if children:
+			self.children = children
+		else:
+			self.children = []
+		self.leaf = leaf
+
 def p_expression_plus(p):
     'expression : expression plus expression'
-    print('expression : expression plus expression: {} + {}', p[1], p[3])
-    p[0] = p[1] + p[3]
+    print('expression : expression plus expression: {} + {}', p[1].type, p[3].type)
+    p[0] = Node("plus", [p[1], p[3]], p[2])
 
 def p_expression_num(p):
 	'expression : integer'
 	print('expression : integer: {}', p[1])
-	p[0] = p[1]
+	p[0] = Node("integer", None, p[1])
 
 # Error rule for syntax errors
 def p_error(p):
@@ -68,4 +77,4 @@ if __name__ == '__main__':
 			# 	break
 			# if not s: continue
 			result = parser.parse(lexer = lexer)
-			print result
+			# print result
