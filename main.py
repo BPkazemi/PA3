@@ -6,12 +6,12 @@ from lexer import Lexer
 
 def p_expression_plus(p):
     'expression : expression plus expression'
-    print('expression : expression plus expression')
+    print('expression : expression plus expression: {} + {}', p[1], p[3])
     p[0] = p[1] + p[3]
 
 def p_expression_num(p):
 	'expression : integer'
-	print('expression : integer')
+	print('expression : integer: {}', p[1])
 	p[0] = p[1]
 
 # Error rule for syntax errors
