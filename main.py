@@ -1,19 +1,20 @@
 import ply.yacc as yacc
 import sys
 
-tokens = (
-	'PLUS', 'MINUS', 'TIMES', 'NUMBER'
-	)
+from lexer import tokens
 
 # tokens = (
-# 	'at', 'case', 'class', 'colon', 'comma',
-# 	 'divide', 'dot', 'else', 'equals', 'esac', 'false',
-# 	 'fi', 'identifier', 'if', 'in', 'inherits',
-# 	 'integer', 'isvoid', 'larrow', 'lbrace', 'le', 'let', 
-# 	 'loop', 'lparen', 'lt', 'minus', 'new', 'not', 'of', 'plus',
-# 	 'pool', 'rarrow', 'rbrace', 'rparen', 'semi', 'string', 'then', 
-# 	 'tilde', 'times', 'true', 'type', 'while'
-#     )
+# 	"integer", "class", "type", "case",
+# 	"at", "equals", "larrow", "rarrow",
+# 	"lbrace", "rbrace", "le", "lt", "semi",
+# 	"colon", "tilde", "lparen", "rparen",
+# 	"divide", "times", "plus", "minus", 
+# 	"else", "comma", "dot", "false", "true",
+# 	"fi", "if", "inherits", "in", "isvoid",
+# 	"let", "loop", "new", "not", "of",
+# 	"pool", "then", "while", "esac", "string",
+# 	"identifier"
+# 	)
 
 def p_expression_plus(p):
     'expression : expression PLUS expression'
@@ -41,9 +42,9 @@ if __name__ == '__main__':
 
 		while True:
 			try:
-				s = raw_input('2 + 2')
+				s = raw_input('ply > ')
 			except EOFError:
 				break
 			if not s: continue
 			result = parser.parse(s)
-			print result
+			print type(result)

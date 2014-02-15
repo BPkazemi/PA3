@@ -26,6 +26,6 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> expression","S'",1,None,None,None),
-  ('expression -> expression PLUS expression','expression',3,'p_expression_plus','main.py',19),
-  ('expression -> NUMBER','expression',1,'p_expression_num','main.py',23),
+  ('expression -> expression PLUS expression','expression',3,'p_expression_plus','main.py',22),
+  ('expression -> NUMBER','expression',1,'p_expression_num','main.py',26),
 ]
