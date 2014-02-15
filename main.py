@@ -6,15 +6,18 @@ from lexer import Lexer
 
 def p_expression_plus(p):
     'expression : expression plus expression'
+    print('expression : expression plus expression')
     p[0] = p[1] + p[3]
 
 def p_expression_num(p):
 	'expression : integer'
+	print('expression : integer')
 	p[0] = p[1]
 
 # Error rule for syntax errors
 def p_error(p):
     print "Syntax error in input!"
+    exit()
 
 def read_tokens_create_lexer(filename):
 	if os.path.exists(filename):
