@@ -49,51 +49,101 @@ def p_program_many(p):
 def p_class_def(p):
 	'''CLASSDEF : class type lbrace rbrace
 				| class type lbrace FEATURE semi rbrace'''
-	pass
+	if len(p) == 5:
+		p[0] = []
+	else:
+		p[0] = p[4]
 
 def p_class_def_inherits(p):
 	'''CLASSDEF : class type inherits type lbrace rbrace
 				| class type inherits type lbrace FEATURE rbrace'''
-	pass
+	if len(p) == 7:
+		p[0] = []
+	else:
+		p[0] = p[6]
 
 def p_feature(p):
 	'''FEATURE : identifier lparen FORMAL rparen colon type lbrace EXPR rbrace
 				| identifier colon type
 				| identifier colon type larrow EXPR'''
-	pass
+	if len(p) == 4:
+		p[0] = []
+	elif len(p) == 6:
+		p[0] = p[5]
+	else:
+		p[0] = p[3] + p[8]
 
 def p_formal(p):
 	'''FORMAL : identifier colon type
 			| FORMAL comma identifier colon type
 			| '''
-	pass
+	if len(p) == 4:
+		p[0] = []
+	elif len(p) == 1:
+		p[0] = []
+	else:
+		p[0] = p[1]
 
-def p_expr(p):
-	'''EXPR : identifier larrow EXPR
-			| EXPR comma EXPR
-			| EXPR semi EXPR
-			| EXPR at type dot identifier lparen rparen
-			| EXPR dot identifier lparen rparen
-			| EXPR at type dot identifier lparen EXPR rparen
+def p_expr_case(p):
+	'''EXPR : case EXPR of identifier colon type rarrow EXPR semi esac'''
+	p[0] = p[2] + p[8]
+
+def p_expr_at_dot(p):
+	'''EXPR : EXPR at type dot identifier lparen EXPR rparen
 			| EXPR dot identifier lparen EXPR rparen
-			| identifier lparen rparen
-			| identifier lparen EXPR rparen
-			| if EXPR then EXPR else EXPR fi
-			| while EXPR loop EXPR pool
-			| lbrace EXPR semi rbrace
-			| let identifier colon type in EXPR
-			| let identifier colon type larrow EXPR in EXPR
-			| case EXPR of identifier colon type rarrow EXPR semi esac
-			| lparen EXPR rparen
 			'''
-	pass
+	if len(p) == 9:
+		p[0] = p[1] + p[7]
+	else:
+		p[0] = p[1] + p[5]
+
+def p_expr_let(p):
+	'''EXPR : let identifier colon type in EXPR
+			| let identifier colon type larrow EXPR in EXPR
+			'''	
+	if len(p) == 7:
+		p[0] = p[6]
+	else:
+		p[0] = p[6] + p[8]
+
+def p_expr_seconds(p):
+	'''EXPR : lparen EXPR rparen
+			| lbrace EXPR semi rbrace'''
+	p[0] = p[2]
+
+
+def p_expr_thirds(p):
+	'''EXPR : identifier larrow EXPR
+			| identifier lparen EXPR rparen'''
+	p[0] = p[3]
+
+
+def p_expr_firsts(p):
+	'''EXPR : EXPR at type dot identifier lparen rparen
+			| EXPR dot identifier lparen rparen'''
+	p[0] = p[1]
+
+def p_expr_conditionals(p):
+	'''EXPR : if EXPR then EXPR else EXPR fi
+			| while EXPR loop EXPR pool'''
+	if p[1] == 'if':
+		p[0] = p[2] + p[4] + p[6]
+	else:
+		p[0] = p[2] + p[4]
+
+
+def p_expr_list(p):
+	'''EXPR : EXPR comma EXPR
+			| EXPR semi EXPR'''
+	p[0] = p[1] + p[3]
 
 def p_expr_doubles(p):
 	'''EXPR : new type
 			| isvoid EXPR
 			| tilde EXPR
-			| not EXPR'''
-	p[0] = (p[1], p[2])
+			| not EXPR
+			| identifier lparen rparen'''
+	p[0] = []
 
 
 
@@ -106,7 +156,8 @@ def p_expr_math(p):
 			| EXPR le EXPR
 			| EXPR equals EXPR'''
 	# p[0] = binary_ops[p[2]]((p[1], p[3]))
-	p[0] = (p[1], p[2], p[3])
+	# p[0] = (p[1], p[2], p[3])
+	p[0] = p[1] + p[3]
 
 
 def p_expr_terminal(p):
@@ -116,19 +167,19 @@ def p_expr_terminal(p):
 			| true
 			| false'''
 	# p[0] = ast.Const(p[1])
-	p[0] = p[1]
+	p[0] = []
 	
 
 
-def p_expression_plus(p):
-    'expression : expression plus expression'
-    print('expression : expression plus expression: {} + {}', p[1], p[3])
-    p[0] = p[1] + p[3]
+# def p_expression_plus(p):
+#     'expression : expression plus expression'
+#     print('expression : expression plus expression: {} + {}', p[1], p[3])
+#     p[0] = p[1] + p[3]
 
-def p_expression_num(p):
-	'expression : integer'
-	print('expression : integer: {}', p[1])
-	p[0] = p[1]
+# def p_expression_num(p):
+# 	'expression : integer'
+# 	print('expression : integer: {}', p[1])
+# 	p[0] = p[1]
 
 def p_empty(p):
 	'empty :'
