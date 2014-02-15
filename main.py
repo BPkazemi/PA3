@@ -1,32 +1,50 @@
 import ply.yacc as yacc
-import sys
+import ply.lex as lex
+import sys, os
 
-from lexer import tokens
-
-# tokens = (
-# 	"integer", "class", "type", "case",
-# 	"at", "equals", "larrow", "rarrow",
-# 	"lbrace", "rbrace", "le", "lt", "semi",
-# 	"colon", "tilde", "lparen", "rparen",
-# 	"divide", "times", "plus", "minus", 
-# 	"else", "comma", "dot", "false", "true",
-# 	"fi", "if", "inherits", "in", "isvoid",
-# 	"let", "loop", "new", "not", "of",
-# 	"pool", "then", "while", "esac", "string",
-# 	"identifier"
-# 	)
+from lexer import Lexer
 
 def p_expression_plus(p):
-    'expression : expression PLUS expression'
+    'expression : expression plus expression'
     p[0] = p[1] + p[3]
 
 def p_expression_num(p):
-	'expression : NUMBER'
+	'expression : integer'
 	p[0] = p[1]
 
 # Error rule for syntax errors
 def p_error(p):
     print "Syntax error in input!"
+
+def read_tokens_create_lexer(filename):
+	if os.path.exists(filename):
+		three_liners = ("type", "identifier", "string", "integer")
+
+		# Open the cl-lex file and read all lines
+		with open(lex_fname) as f:
+			contents = f.readlines()
+
+		index = 0
+		lexer = Lexer()
+		while index < len(contents):
+			# Read in the lexing tokens and add to Lexer
+			line_no = contents[index].rstrip()
+			token_type = contents[index+1].rstrip()
+			value = None
+			# print "{} in three_liners: {}".format(token_type, token_type in three_liners)
+			if token_type in three_liners:
+				value = contents[index+2].rstrip()
+				index += 3
+			else:
+				index += 2
+			# print("Adding Type: {}, LineNo: {}, Value:{}\n".format(token_type, line_no, value))
+			lexer.add_token(token_type, line_no, value)
+		return lexer
+
+
+	else:
+		print "File Does Not Exist."
+		return None
 
 if __name__ == '__main__':
 	if len(sys.argv) != 2:
@@ -34,8 +52,10 @@ if __name__ == '__main__':
 	else:
 		lex_fname = sys.argv[1]
 
-		with open(lex_fname) as f:
-			contents = f.readlines()
+		lexer = read_tokens_create_lexer(lex_fname)
+		tokens = lexer.token_types
+
+		print "First Token: {}".format(lexer.token().value)
 
 		# Build the parser
 		parser = yacc.yacc()
@@ -46,5 +66,5 @@ if __name__ == '__main__':
 			except EOFError:
 				break
 			if not s: continue
-			result = parser.parse(s)
+			result = parser.parse(lexer = lexer)
 			print type(result)

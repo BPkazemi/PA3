@@ -1,32 +1,42 @@
 import ply.lex as lex
+import Queue
 
-tokens = (
-	'PLUS', 'MINUS', 'TIMES', 'NUMBER'
-)
+class Token:
+	'''
+	The Token Class. Holds a type, line number, and value if necessary
+	'''
 
-# Regular expression rules for simple tokens
-t_PLUS    = r'\+'
-t_MINUS   = r'-'
-t_TIMES   = r'\*'
+	def __init__(self, token_type, line_no, value=None):
+		self.type = token_type
+		self.line_no = line_no
+		self.value = (token_type, value, line_no)
 
-# A regular expression rule with some action code
-def t_NUMBER(t):
-    r'\d+'
-    t.value = int(t.value)    
-    return t
 
-# Define a rule so we can track line numbers
-def t_newline(t):
-    r'\n+'
-    t.lexer.lineno += len(t.value)
+class Lexer:
+	# List of Token names
+	token_types = (
+	"integer", "class", "type", "case",
+	"at", "equals", "larrow", "rarrow",
+	"lbrace", "rbrace", "le", "lt", "semi",
+	"colon", "tilde", "lparen", "rparen",
+	"divide", "times", "plus", "minus", 
+	"else", "comma", "dot", "false", "true",
+	"fi", "if", "inherits", "in", "isvoid",
+	"let", "loop", "new", "not", "of",
+	"pool", "then", "while", "esac", "string",
+	"identifier"
+	)
 
-# A string containing ignored characters (spaces and tabs)
-t_ignore  = ' \t'
+	def __init__(self):
+		self.tokens = Queue.Queue()
 
-# Error handling rule
-def t_error(t):
-    print "Illegal character '%s'" % t.value[0]
-    t.lexer.skip(1)
+	def add_token(self, token_type, line_no, value=None):
+		if token_type in self.token_types:
+			t = Token(token_type, line_no, value)
+		else:
+			print 'Invalid Token Type'
+			return
+		self.tokens.put(t)
 
-# Build the lexer
-lexer = lex.lex()
+	def token(self):
+		return self.tokens.get()
