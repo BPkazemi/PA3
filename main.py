@@ -55,16 +55,14 @@ if __name__ == '__main__':
 		lexer = read_tokens_create_lexer(lex_fname)
 		tokens = lexer.token_types
 
-		print "First Token: {}".format(lexer.token().value)
-
 		# Build the parser
 		parser = yacc.yacc()
 
 		while True:
-			try:
-				s = raw_input('ply > ')
-			except EOFError:
-				break
-			if not s: continue
+			# try:
+			# 	s = raw_input('ply > ')
+			# except EOFError:
+			# 	break
+			# if not s: continue
 			result = parser.parse(lexer = lexer)
-			print type(result)
+			print result

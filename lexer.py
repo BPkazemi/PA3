@@ -11,6 +11,9 @@ class Token:
 		self.line_no = line_no
 		self.value = (token_type, value, line_no)
 
+	def __repr__(self):
+		return "Token{}".format(self.value)
+
 
 class Lexer:
 	# List of Token names
@@ -39,4 +42,7 @@ class Lexer:
 		self.tokens.put(t)
 
 	def token(self):
-		return self.tokens.get()
+		if self.tokens.empty():
+			return None
+		else:
+			return self.tokens.get()
