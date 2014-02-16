@@ -65,7 +65,8 @@ def p_class_def_inherits(p):
 def p_feature(p):
 	'''FEATURE : identifier lparen FORMAL rparen colon type lbrace EXPR rbrace
 				| identifier colon type
-				| identifier colon type larrow EXPR'''
+				| identifier colon type larrow EXPR
+				| FEATURE semi FEATURE'''
 	if len(p) == 4:
 		p[0] = []
 	elif len(p) == 6:
@@ -84,9 +85,23 @@ def p_formal(p):
 	else:
 		p[0] = p[1]
 
+# def p_expr_case(p):
+# 	'''EXPR : case EXPR of identifier colon type rarrow EXPR semi esac'''
+# 	p[0] = p[2] + p[8]
+
 def p_expr_case(p):
-	'''EXPR : case EXPR of identifier colon type rarrow EXPR semi esac'''
+	'''EXPR : case EXPR of CASEHELPER esac'''
 	p[0] = p[2] + p[8]
+
+def p_case_helper(p):
+	'''CASEHELPER : identifier colon type rarrow EXPR semi
+					| CASEHELPER identifier colon type rarrow EXPR semi
+					| '''
+
+def p_let_helper(p):
+	'''LETHELPER : comma identifier colon type LETHELPER
+				| comma identifier colon type larrow EXPR LETHELPER
+				| '''
 
 def p_expr_at_dot(p):
 	'''EXPR : EXPR at type dot identifier lparen EXPR rparen
@@ -98,8 +113,8 @@ def p_expr_at_dot(p):
 		p[0] = p[1] + p[5]
 
 def p_expr_let(p):
-	'''EXPR : let identifier colon type in EXPR
-			| let identifier colon type larrow EXPR in EXPR
+	'''EXPR : let identifier colon type LETHELPER in EXPR
+			| let identifier colon type larrow EXPR LETHELPER in EXPR
 			'''	
 	if len(p) == 7:
 		p[0] = p[6]
@@ -138,14 +153,10 @@ def p_expr_list(p):
 	p[0] = p[1] + p[3]
 
 def p_expr_doubles(p):
-	'''EXPR : new type
-			| isvoid EXPR
+	'''EXPR : isvoid EXPR
 			| tilde EXPR
-			| not EXPR
-			| identifier lparen rparen'''
-	p[0] = []
-
-
+			| not EXPR'''
+	p[0] = [2]
 
 def p_expr_math(p):
 	'''EXPR : EXPR plus EXPR
@@ -165,7 +176,9 @@ def p_expr_terminal(p):
 			| integer
 			| string
 			| true
-			| false'''
+			| false
+			| identifier lparen rparen
+			| new type'''
 	# p[0] = ast.Const(p[1])
 	p[0] = []
 	
@@ -181,10 +194,10 @@ def p_expr_terminal(p):
 # 	print('expression : integer: {}', p[1])
 # 	p[0] = p[1]
 
-def p_empty(p):
-	'empty :'
-	print('empty :')
-	pass
+# def p_empty(p):
+# 	'empty :'
+# 	print('empty :')
+# 	pass
 
 # Error rule for syntax errors
 def p_error(p):
@@ -243,7 +256,7 @@ if __name__ == '__main__':
 		log = logging.getLogger()		
 
 		# Build the parser
-		parser = yacc.yacc(debug=True, debuglog = log)
+		parser = yacc.yacc(debug=True)
 		# print parser.productions
 
 		while True:
