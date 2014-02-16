@@ -10,7 +10,7 @@ precedence = (
 	('nonassoc', 'not'),
 	('left', 'equals', 'lt', 'le'),
     ('left', 'plus', 'minus'),
-    ('left', 'times', 'divide'),
+    ('left', 'times', 'divide', 'semi'),
     ('nonassoc', 'isvoid'),
     ('right', 'tilde'),
     ('nonassoc', 'at'),
@@ -66,7 +66,8 @@ def p_feature(p):
 	'''FEATURE : identifier lparen FORMAL rparen colon type lbrace EXPR rbrace
 				| identifier lparen rparen colon type lbrace EXPR rbrace
 				| identifier colon type
-				| identifier colon type larrow EXPR'''
+				| identifier colon type larrow EXPR
+				| FEATUREHELPER'''
 	if len(p) == 4:
 		p[0] = []
 	elif len(p) == 6:
@@ -77,7 +78,7 @@ def p_feature(p):
 		p[0] = p[3] + p[8]
 
 def p_feature_helper(p):
-	'''FEATURE : FEATURE semi FEATURE'''
+	'''FEATUREHELPER : FEATURE semi FEATURE'''
 	p[0] = p[1] + p[3]
 
 def p_formal(p):
