@@ -12,12 +12,22 @@ precedence = (
     ('left', 'plus', 'minus'),
     ('left', 'times', 'divide'),
     ('left', 'let'),
+    # ('left', 'semi'),
     ('nonassoc', 'isvoid'),
     ('right', 'tilde'),
-    # ('left', 'semi'),
     ('nonassoc', 'at'),
     ('nonassoc', 'dot')
 )
+
+########### AST  ##############
+class Node:
+	def __init__(self, type, children=None, leaf=None):
+		self.type = type
+		if children:
+			self.children = children
+		else:
+			self.children = [ ]
+		self.leaf = leaf
 
 ########### Parser (token -> AST) #############
 
@@ -65,7 +75,7 @@ def p_class_def_inherits(p):
 		p[0] = p[6]
 
 def p_feature(p):
-	'''FEATURE : identifier lparen FORMAL rparen colon type lbrace EXPR rbrace
+	'''FEATURELIT : identifier lparen FORMAL rparen colon type lbrace EXPR rbrace
 				| identifier lparen rparen colon type lbrace EXPR rbrace
 				| identifier colon type
 				| identifier colon type larrow EXPR'''
@@ -79,8 +89,12 @@ def p_feature(p):
 		p[0] = p[3] + p[8]
 
 def p_feature_helper(p):
-	'''FEATURE :  FEATURELIST semi FEATURE'''
-	p[0] = p[1] + p[3]
+	'''FEATURE :  FEATURE semi FEATURELIT
+				| FEATURELIT'''
+	if len(p) == 4:
+		p[0] = p[1] + p[3]
+	else:
+		p[0] = p[1]
 
 def p_feature_list(p):
 	'''FEATURELIST : FEATURE semi FEATURELIST
@@ -92,12 +106,16 @@ def p_feature_list(p):
 
 
 def p_formal(p):
-	'''FORMAL : identifier colon type
-			| FORMAL comma identifier colon type'''
+	'''FORMAL : FORMAL comma FORMALLIT
+			| FORMALLIT'''
 	if len(p) == 4:
-		p[0] = []
+		p[0] = p[1] + p[3]
 	else:
 		p[0] = p[1]
+
+def p_formal_lit(p):
+	'''FORMALLIT : identifier colon type'''
+	p[0] = []
 
 # def p_expr_case(p):
 # 	'''EXPR : case EXPR of identifier colon type rarrow EXPR semi esac'''
@@ -108,18 +126,25 @@ def p_expr_case(p):
 	p[0] = p[2] + p[8]
 
 def p_case_helper(p):
-	'''CASEHELPER : identifier colon type rarrow EXPR semi
-					| CASEHELPER identifier colon type rarrow EXPR semi'''
-	if len(p) == 7:
-		p[0] = p[5]
+	'''CASEHELPER : CASEHELPER CASELIT
+					| CASELIT'''
+	if len(p) == 3:
+		p[0] = p[1] + p[2]
 	else:
-		p[0] = p[1] + p[6]
+		p[0] = p[1]
 
+def p_case_lit(p):
+	'''CASELIT : identifier colon type rarrow EXPR semi'''
+	p[0] = p[5]
+
+def p_expr_firsts(p):
+	'''EXPR : EXPR at type dot identifier lparen rparen
+			| EXPR dot identifier lparen rparen'''
+	p[0] = p[1]
 
 def p_expr_at_dot(p):
-	'''EXPR : EXPR at type dot identifier lparen EXPR rparen
-			| EXPR dot identifier lparen EXPR rparen
-			'''
+	'''EXPR : EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+			| EXPR dot identifier lparen EXPRLISTCOMMA rparen'''
 	if len(p) == 9:
 		p[0] = p[1] + p[7]
 	else:
@@ -129,39 +154,48 @@ def p_expr_at_dot(p):
 def p_expr_let(p):
 	'''EXPR : let identifier colon type LETHELPER in EXPR
 			| let identifier colon type larrow EXPR LETHELPER in EXPR
+			| let identifier colon type in EXPR
+			| let identifier colon type larrow EXPR in EXPR
 			'''	
 	if len(p) == 8:
 		p[0] = p[5] + p[7]
-	else:
+	elif len(p) == 10:
 		p[0] = p[6] + p[7] + p[9]
+	elif len(p) == 7:
+		p[0] = p[6]
+	else:
+		p[0] = p[6] + p[8]
 
 def p_let_helper(p):
-	'''LETHELPER : comma identifier colon type LETHELPER
-				| comma identifier colon type larrow EXPR LETHELPER
-				| '''
-	if len(p)==1:
+	'''LETHELPER : comma LETHELPERLIT LETHELPER
+				| comma LETHELPERLIT'''
+	p[0] = p[2] + p[3]
+
+def p_let_lit(p):
+	'''LETHELPERLIT : identifier colon type
+			| identifier colon type larrow EXPR'''
+	if len(p) == 4:
 		p[0] = []
-	elif len(p) == 6:
-		p[0] = p[5]
 	else:
-		p[0] = p[6] + p[7]
+		p[0] = p[5]
 
 def p_expr_seconds(p):
 	'''EXPR : lparen EXPR rparen
-			| lbrace EXPR semi rbrace'''
+			| lbrace EXPRLISTSEMI semi rbrace'''
 	p[0] = p[2]
 
+def p_expr_id_call(p):
+	'''EXPR : identifier lparen rparen
+			| identifier lparen EXPRLISTCOMMA rparen'''
+	if len(p) == 4:
+		p[0] = []
+	else:
+		p[0] = p[3]
 
-def p_expr_thirds(p):
-	'''EXPR : identifier larrow EXPR
-			| identifier lparen EXPR rparen'''
+def p_expr_assign(p):
+	'''EXPR : identifier larrow EXPR'''
 	p[0] = p[3]
 
-
-def p_expr_firsts(p):
-	'''EXPR : EXPR at type dot identifier lparen rparen
-			| EXPR dot identifier lparen rparen'''
-	p[0] = p[1]
 
 def p_expr_conditionals(p):
 	'''EXPR : if EXPR then EXPR else EXPR fi
@@ -172,26 +206,26 @@ def p_expr_conditionals(p):
 		p[0] = p[2] + p[4]
 
 
-def p_expr_list(p):
-	'''EXPR : EXPR EXPRLISTCOMMA
-			| EXPR EXPRLISTSEMI'''
-	p[0] = p[1] + p[3]
+# def p_expr_list(p):
+# 	'''EXPR : EXPR semi EXPR
+# 			| EXPR comma EXPR'''
+# 	p[0] = p[1] + p[3]
 
 def p_expr_list_comma(p):
-	'''EXPRLISTCOMMA : comma EXPR EXPRLISTCOMMA
-			| comma EXPR'''
+	'''EXPRLISTCOMMA : EXPRLISTCOMMA comma EXPR
+			| EXPR'''
 	if len(p) == 4:
-		p[0] = p[1] + p[2]
+		p[0] = p[1] + p[3]
 	else:
-		p[0] = p[2]
+		p[0] = p[1]
 
 def p_expr_list_semi(p):
-	'''EXPRLISTSEMI : semi EXPR EXPRLISTSEMI
-			| semi EXPR'''
+	'''EXPRLISTSEMI : EXPRLISTSEMI semi EXPR
+			| EXPR'''
 	if len(p) == 4:
-		p[0] = p[1] + p[2]
+		p[0] = p[1] + p[3]
 	else:
-		p[0] = p[2]	
+		p[0] = p[1]
 
 
 def p_expr_doubles(p):
@@ -219,7 +253,6 @@ def p_expr_terminal(p):
 			| string
 			| true
 			| false
-			| identifier lparen rparen
 			| new type'''
 	# p[0] = ast.Const(p[1])
 	p[0] = []

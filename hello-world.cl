@@ -6,5 +6,12 @@ class Main inherits IO {
     out_string("Hello, world.\n")
   } ;
 
-   testee : Int <- out;
+  testee : Int <- 4;
+
+  out : Int <-		-- out is our 'output'.  Its values are the primes.
+    {
+      out_string("2 is trivially prime.\n");
+      2;
+    };
+
 } ;
