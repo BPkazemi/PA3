@@ -8,9 +8,9 @@ from lexer import Lexer
 precedence = (
 	('nonassoc', 'larrow'),
 	('nonassoc', 'not'),
-	('nonassoc', 'equals', 'lt', 'le'),
+	('left', 'equals', 'lt', 'le'),
     ('left', 'plus', 'minus'),
-    ('left', 'times', 'divide'),
+    ('left', 'times', 'divide', 'semi'),
     ('nonassoc', 'isvoid'),
     ('right', 'tilde'),
     ('nonassoc', 'at'),
@@ -56,7 +56,7 @@ def p_class_def(p):
 
 def p_class_def_inherits(p):
 	'''CLASSDEF : class type inherits type lbrace rbrace
-				| class type inherits type lbrace FEATURE rbrace'''
+				| class type inherits type lbrace FEATURE semi rbrace'''
 	if len(p) == 7:
 		p[0] = []
 	else:
@@ -64,23 +64,27 @@ def p_class_def_inherits(p):
 
 def p_feature(p):
 	'''FEATURE : identifier lparen FORMAL rparen colon type lbrace EXPR rbrace
+				| identifier lparen rparen colon type lbrace EXPR rbrace
 				| identifier colon type
 				| identifier colon type larrow EXPR
-				| FEATURE semi FEATURE'''
+				| FEATUREHELPER'''
 	if len(p) == 4:
 		p[0] = []
 	elif len(p) == 6:
 		p[0] = p[5]
+	elif len(p) == 9:
+		p[0] = p[7]
 	else:
 		p[0] = p[3] + p[8]
 
+def p_feature_helper(p):
+	'''FEATUREHELPER : FEATURE semi FEATURE'''
+	p[0] = p[1] + p[3]
+
 def p_formal(p):
 	'''FORMAL : identifier colon type
-			| FORMAL comma identifier colon type
-			| '''
+			| FORMAL comma identifier colon type'''
 	if len(p) == 4:
-		p[0] = []
-	elif len(p) == 1:
 		p[0] = []
 	else:
 		p[0] = p[1]
@@ -95,13 +99,12 @@ def p_expr_case(p):
 
 def p_case_helper(p):
 	'''CASEHELPER : identifier colon type rarrow EXPR semi
-					| CASEHELPER identifier colon type rarrow EXPR semi
-					| '''
+					| CASEHELPER identifier colon type rarrow EXPR semi'''
+	if len(p) == 7:
+		p[0] = p[5]
+	else:
+		p[0] = p[1] + p[6]
 
-def p_let_helper(p):
-	'''LETHELPER : comma identifier colon type LETHELPER
-				| comma identifier colon type larrow EXPR LETHELPER
-				| '''
 
 def p_expr_at_dot(p):
 	'''EXPR : EXPR at type dot identifier lparen EXPR rparen
@@ -112,14 +115,26 @@ def p_expr_at_dot(p):
 	else:
 		p[0] = p[1] + p[5]
 
+
 def p_expr_let(p):
 	'''EXPR : let identifier colon type LETHELPER in EXPR
 			| let identifier colon type larrow EXPR LETHELPER in EXPR
 			'''	
-	if len(p) == 7:
-		p[0] = p[6]
+	if len(p) == 8:
+		p[0] = p[5] + p[7]
 	else:
-		p[0] = p[6] + p[8]
+		p[0] = p[6] + p[7] + p[9]
+
+def p_let_helper(p):
+	'''LETHELPER : comma identifier colon type LETHELPER
+				| comma identifier colon type larrow EXPR LETHELPER
+				| '''
+	if len(p)==1:
+		p[0] = []
+	elif len(p) == 6:
+		p[0] = p[5]
+	else:
+		p[0] = p[6] + p[7]
 
 def p_expr_seconds(p):
 	'''EXPR : lparen EXPR rparen
