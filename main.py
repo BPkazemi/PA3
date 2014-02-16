@@ -10,7 +10,8 @@ precedence = (
 	('nonassoc', 'not'),
 	('left', 'equals', 'lt', 'le'),
     ('left', 'plus', 'minus'),
-    ('left', 'times', 'divide', 'semi'),
+    ('left', 'times', 'divide'),
+    ('left', 'let'),
     ('nonassoc', 'isvoid'),
     ('right', 'tilde'),
     ('nonassoc', 'at'),
@@ -66,8 +67,7 @@ def p_feature(p):
 	'''FEATURE : identifier lparen FORMAL rparen colon type lbrace EXPR rbrace
 				| identifier lparen rparen colon type lbrace EXPR rbrace
 				| identifier colon type
-				| identifier colon type larrow EXPR
-				| FEATUREHELPER'''
+				| identifier colon type larrow EXPR'''
 	if len(p) == 4:
 		p[0] = []
 	elif len(p) == 6:
@@ -78,8 +78,17 @@ def p_feature(p):
 		p[0] = p[3] + p[8]
 
 def p_feature_helper(p):
-	'''FEATUREHELPER : FEATURE semi FEATURE'''
-	p[0] = p[1] + p[3]
+	'''FEATURE :  FEATURELIST FEATURE'''
+	p[0] = p[1] + p[2]
+
+def p_feature_list(p):
+	'''FEATURELIST : FEATURELIST FEATURE semi
+					| '''
+	if len(p) == 4:
+		p[0] = p[1] + p[2]
+	else:
+		p[0] = []
+
 
 def p_formal(p):
 	'''FORMAL : identifier colon type
@@ -163,9 +172,26 @@ def p_expr_conditionals(p):
 
 
 def p_expr_list(p):
-	'''EXPR : EXPR comma EXPR
-			| EXPR semi EXPR'''
+	'''EXPR : EXPR semi EXPR
+			| EXPR comma EXPR'''
 	p[0] = p[1] + p[3]
+
+# def p_expr_list_comma(p):
+# 	'''EXPRLISTCOMMA : EXPRLISTCOMMA EXPR comma
+# 			| '''
+# 	if len(p) == 4:
+# 		p[0] = p[1] + p[2]
+# 	else:
+# 		p[0] = []
+
+# def p_expr_list_semi(p):
+# 	'''EXPRLISTSEMI : EXPRLISTSEMI EXPR semi
+# 			| '''
+# 	if len(p) == 4:
+# 		p[0] = p[1] + p[2]
+# 	else:
+# 		p[0] = []	
+
 
 def p_expr_doubles(p):
 	'''EXPR : isvoid EXPR
