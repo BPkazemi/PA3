@@ -14,6 +14,7 @@ precedence = (
     ('left', 'let'),
     ('nonassoc', 'isvoid'),
     ('right', 'tilde'),
+    # ('left', 'semi'),
     ('nonassoc', 'at'),
     ('nonassoc', 'dot')
 )
@@ -78,14 +79,14 @@ def p_feature(p):
 		p[0] = p[3] + p[8]
 
 def p_feature_helper(p):
-	'''FEATURE :  FEATURELIST FEATURE'''
-	p[0] = p[1] + p[2]
+	'''FEATURE :  FEATURELIST semi FEATURE'''
+	p[0] = p[1] + p[3]
 
 def p_feature_list(p):
-	'''FEATURELIST : FEATURELIST FEATURE semi
+	'''FEATURELIST : FEATURE semi FEATURELIST
 					| '''
 	if len(p) == 4:
-		p[0] = p[1] + p[2]
+		p[0] = p[1] + p[3]
 	else:
 		p[0] = []
 
@@ -172,25 +173,25 @@ def p_expr_conditionals(p):
 
 
 def p_expr_list(p):
-	'''EXPR : EXPR semi EXPR
-			| EXPR comma EXPR'''
+	'''EXPR : EXPR EXPRLISTCOMMA
+			| EXPR EXPRLISTSEMI'''
 	p[0] = p[1] + p[3]
 
-# def p_expr_list_comma(p):
-# 	'''EXPRLISTCOMMA : EXPRLISTCOMMA EXPR comma
-# 			| '''
-# 	if len(p) == 4:
-# 		p[0] = p[1] + p[2]
-# 	else:
-# 		p[0] = []
+def p_expr_list_comma(p):
+	'''EXPRLISTCOMMA : comma EXPR EXPRLISTCOMMA
+			| comma EXPR'''
+	if len(p) == 4:
+		p[0] = p[1] + p[2]
+	else:
+		p[0] = p[2]
 
-# def p_expr_list_semi(p):
-# 	'''EXPRLISTSEMI : EXPRLISTSEMI EXPR semi
-# 			| '''
-# 	if len(p) == 4:
-# 		p[0] = p[1] + p[2]
-# 	else:
-# 		p[0] = []	
+def p_expr_list_semi(p):
+	'''EXPRLISTSEMI : semi EXPR EXPRLISTSEMI
+			| semi EXPR'''
+	if len(p) == 4:
+		p[0] = p[1] + p[2]
+	else:
+		p[0] = p[2]	
 
 
 def p_expr_doubles(p):
