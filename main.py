@@ -51,11 +51,6 @@ class Lexer:
 
 	def add_token(self, token_type, line_no, value=None):
 		if token_type in self.token_types:
-			# t = lex.LexToken()
-			# t.type = token_type
-			# t.value = value
-			# t.lineno = int(line_no)
-			# t.lexpos = 0
 			t = Token(token_type, line_no, value)
 		else:
 			print 'Invalid Token Type'
@@ -213,10 +208,10 @@ def p_case_lit(p):
 def p_expr_firsts(p):
 	'''EXPR : EXPR at type dot identifier lparen rparen
 			| EXPR dot identifier lparen rparen'''
-	if p[2] == "at":
-		p[0] = Node("static_dispatch", [], {"expression": p[1], "method": p[5], "type": p[3]})
+	if len(p) == 8:
+		p[0] = Node("static_dispatch", [], {"expression": p[1], "method": p[5], "type": p[3], "lineno": p[2][2]})
 	else:
-		p[0] = Node("dynamic_dispatch", [], {"expression": p[1], "method": p[3]})
+		p[0] = Node("dynamic_dispatch", [], {"expression": p[1], "method": p[3], "lineno": p[2][2]})
 	# p[0] = p[1]
 
 def p_expr_at_dot(p):
@@ -227,13 +222,13 @@ def p_expr_at_dot(p):
 		expression = p[1]#Node("static_exp", [p[1]], "EXPR")
 		expression_list = p[7]#Node("static_params", p[7], "EXPR")
 		# children = [expression].extend(expression_list)
-		p[0] = Node("static_dispatch", expression_list, {"expression": expression, "method": p[5], "type": p[3]})
+		p[0] = Node("static_dispatch", expression_list, {"expression": expression, "method": p[5], "type": p[3], "lineno": p[2][2]})
 	else:
 		# p[0] = p[1] + p[5]
 		expression = p[1]#Node("dynamic_exp", [p[1]], "EXPR")
 		expression_list = p[5]#Node("dynamic_params", p[5], "EXPR")
 		# children = [expression].extend(expression_list)
-		p[0] = Node("dynamic_dispatch", expression_list, {"expression": expression, "method": p[3]})
+		p[0] = Node("dynamic_dispatch", expression_list, {"expression": expression, "method": p[3], "lineno": p[2][2]})
 
 
 def p_expr_let(p):
@@ -243,24 +238,30 @@ def p_expr_let(p):
 			| let identifier colon type larrow EXPR in EXPR
 			'''	
 	if len(p) == 8:
-		binding_node = Node("let_binding_no_init", [], {"identifier": p[2], "type": p[4]})
-		bindings = [binding_node].extend(p[5])
+		binding_node = [Node("let_binding_no_init", [], {"identifier": p[2], "type": p[4]})]
+		binding_node.extend(p[5])
+		bindings = binding_node
+		# print "Bindings1: {}".format(bindings)
 		p[0] = Node("let_statement", [p[7]] , {"let":p[1], "bindings": bindings } )
 		# p[0] = p[5] + p[7]
 	elif len(p) == 10:
-		binding_node = Node("let_binding_init", [p[6]], {"identifier": p[2], "type": p[4]})
-		bindings = [binding_node].extend(p[7])
+		binding_node = [Node("let_binding_init", [p[6]], {"identifier": p[2], "type": p[4]})]
+		binding_node.extend(p[7])
+		bindings = binding_node
+		# print "Bindings2: {}".format(bindings)
 		let_binding_node = Node("let_statement", [p[9]], {"let": p[1], "bindings": bindings})
 		# p[0] = p[6] + p[7] + p[9]
 		p[0] = let_binding_node
 	elif len(p) == 7:
 		# p[0] = p[6]
 		binding_node = Node("let_binding_no_init", [], {"identifier": p[2], "type": p[4]})
+		# print "Bindings3: {}".format([binding_node])
 		let_statement_node = Node("let_statement", [p[6]], {"let": p[1], "bindings": [binding_node]})
 		p[0] = let_statement_node
 	else:
 		# p[0] = p[6] + p[8]
 		binding_node = Node("let_binding_init", [p[6]], {"identifier": p[2], "type": p[4]})
+		# print "Bindings4: {}".format([binding_node])
 		let_statement_node = Node("let_statement", [p[8]], {"let": p[1], "bindings": [binding_node]})
 		p[0] = let_statement_node
 
@@ -289,7 +290,7 @@ def p_expr_seconds(p):
 			| lbrace EXPRLISTSEMI semi rbrace'''
 	p[0] = p[2]
 	if len(p) == 4:
-		p[0] = Node("expression", [p[2]], "lparen EXPR rparen")
+		p[0] = Node("parens", [p[2]], "lparen EXPR rparen")
 	else:
 		p[0] = Node("block", p[2], p[1])
 
@@ -310,7 +311,7 @@ def p_expr_assign(p):
 def p_expr_conditionals(p):
 	'''EXPR : if EXPR then EXPR else EXPR fi
 			| while EXPR loop EXPR pool'''
-	if p[1][0] == 'if':
+	if len(p) == 8:
 		# p[0] = p[2] + p[4] + p[6]
 		# if_block = Node("if_block", [p[2]], "if")
 		# then_block = Node("then_block", [p[4]], "then")
@@ -323,11 +324,6 @@ def p_expr_conditionals(p):
 		p[0] = while_loop_node
 		# p[0] = p[2] + p[4]
 
-
-# def p_expr_list(p):
-# 	'''EXPR : EXPR semi EXPR
-# 			| EXPR comma EXPR'''
-# 	p[0] = p[1] + p[3]
 
 def p_expr_list_comma(p):
 	'''EXPRLISTCOMMA : EXPRLISTCOMMA comma EXPR
@@ -395,7 +391,7 @@ output = ""
 def output_as_identifier(value):
 	return "{0}\n{1}\n".format(value[2], value[1])
 
-def recurce_tree(tree):
+def recurse_tree(tree):
 	global output
 	if tree.type == "Program":
 		# Output list of classes
@@ -418,9 +414,9 @@ def recurce_tree(tree):
 		# f.write(output)
 		output += "{0}\n".format(len(tree.leaf["formals"]))
 		for formal in tree.leaf["formals"]:
-			recurce_tree(formal, f)
+			recurse_tree(formal)
 		output += output_as_identifier(tree.leaf["type"])
-		recurce_tree(tree.leaf["expression"])
+		recurse_tree(tree.leaf["expression"])
 		return
 	elif tree.type == "attribute_no_init":
 		output += "attribute_no_init \n"
@@ -467,13 +463,13 @@ def recurce_tree(tree):
 	elif tree.type == "assign":
 		output += "{0}\nassign\n{1}".format(tree.leaf[2], output_as_identifier(tree.leaf))
 	elif tree.type == "static_dispatch":
-		output += "{0}\nstatic_dispatch\n".format(tree.leaf["expression"].leaf[2])
-		recurce_tree(tree.leaf["expression"])
+		output += "{0}\nstatic_dispatch\n".format(tree.leaf["lineno"])
+		recurse_tree(tree.leaf["expression"])
 		output += "{0}{1}".format(output_as_identifier(tree.leaf["type"]), output_as_identifier(tree.leaf["method"]))
 		output += "{0}\n".format(len(tree.children))
 	elif tree.type == "dynamic_dispatch":
-		output += "{0}\ndynamic_dispatch\n".format(tree.leaf["expression"].leaf[2])
-		recurce_tree(tree.leaf["expression"])
+		output += "{0}\ndynamic_dispatch\n".format(tree.leaf["lineno"])
+		recurse_tree(tree.leaf["expression"])
 		output += output_as_identifier(tree.leaf["method"])
 		output += "{0}\n".format(len(tree.children))
 	elif tree.type == "self_dispatch":
@@ -482,53 +478,38 @@ def recurce_tree(tree):
 	elif tree.type == "let_statement":
 		output += "{0}\nlet\n{1}\n".format(tree.leaf["let"][2], len(tree.leaf["bindings"]))
 		for elem in tree.leaf["bindings"]:
-			recurce_tree(elem)
+			recurse_tree(elem)
 	elif tree.type == "let_binding_no_init":
-		output += "let_binding_no_init\n{0}{1}".format(output_as_identifier(tree.leaf["identifier"],
-														output_as_identifier(tree.leaf["type"])))
+		output += "let_binding_no_init\n{0}{1}".format(output_as_identifier(tree.leaf["identifier"]),
+														output_as_identifier(tree.leaf["type"]))
 	elif tree.type == "let_binding_init":
-		output += "let_binding_init\n{0}{1}".format(output_as_identifier(tree.leaf["identifier"],
-													output_as_identifier(tree.leaf["type"])))
+		output += "let_binding_init\n{0}{1}".format(output_as_identifier(tree.leaf["identifier"]),
+													output_as_identifier(tree.leaf["type"]))
 	elif tree.type == "case":
 		output += "{0}\ncase\n".format(tree.leaf[0][2])
-		recurce_tree(tree.leaf[1])
+		recurse_tree(tree.leaf[1])
 		output += "{0}\n".format(len(tree.children))
 	elif tree.type == "case_element":
-		output += "{0}{1}".format(tree.leaf[0], tree.leaf[1])
+		output += "{0}{1}".format(output_as_identifier(tree.leaf[0]), output_as_identifier(tree.leaf[1]))
+	elif tree.type == "parens":
+		pass
 	if not tree.children:
 		return
 	for elem in tree.children:
-		recurce_tree(elem)
+		recurse_tree(elem)
 
 def output_ast(tree, fname):
 	global output
 	if os.path.exists(fname):
 		os.remove(fname)
-	recurce_tree(tree)
+	recurse_tree(tree)
 	with open(fname, "a+b") as f:
 		f.write(output)
-
-
-
-def output_list(acc, num_chillens, value):
-	acc += "{0}\n".format(num_chillens)
-	return acc
-
-def output_class(acc, num_chillens, value, inherits=None):
-	output_identifer(f, value)
-	if inherits:
-		acc += "inherits \n"
-		output_identifer(acc, num_chillens, value[3])
-	else:
-		acc += "no_inherits \n"
 
 # Error rule for syntax errors
 def p_error(p):
 	if p is None:
-		# print "Error is None"
-		# print "Root: {}".format(ast.type)
 		pass
-		# exit()
 	else:
 		print "ERROR: {0}: Syntax Error".format(p.line_no)
 		exit()
@@ -548,13 +529,11 @@ def read_tokens_create_lexer(filename):
 			line_no = contents[index].rstrip()
 			token_type = contents[index+1].rstrip()
 			value = None
-			# print "{} in three_liners: {}".format(token_type, token_type in three_liners)
 			if token_type in three_liners:
 				value = contents[index+2].rstrip()
 				index += 3
 			else:
 				index += 2
-			# print("Adding Type: {}, LineNo: {}, Value:{}\n".format(token_type, line_no, value))
 			lexer_instance.add_token(token_type, line_no, value)
 		return lexer_instance
 
@@ -579,13 +558,6 @@ if __name__ == '__main__':
 		# print parser.productions
 
 		while True:
-			# try:
-			# 	s = raw_input('ply > ')
-			# except EOFError:
-			# 	break
-			# if not s: continue
 			result = parser.parse(lexer = lexer_instance)
 			output_ast(result, output_fname)
-			# print_tree(result, 0)
 			break
-			# print result
