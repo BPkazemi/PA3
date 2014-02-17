@@ -138,7 +138,7 @@ def p_feature(p):
 		p[0] = Node("attribute_init", [p[5]], "identifier colon type larrow EXPR")
 	elif len(p) == 9:
 		# p[0] = p[7]
-		p[0] = Node("method", [p[8]], "identifier lparen rparen colon type lbrace EXPR rbrace")
+		p[0] = Node("method", [p[7]], "identifier lparen rparen colon type lbrace EXPR rbrace")
 	else:
 		# p[0] = p[3] + p[8]
 		formals = p[3]
@@ -362,7 +362,9 @@ def p_expr_terminal(p):
 	
 
 def recurce_tree(tree):
-	print tree
+	print "Body: {}".format(tree)
+	for elem in tree.children:
+		print " --- ", elem
 	if not len(tree.children):
 		return
 	for child in tree.children:
