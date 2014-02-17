@@ -64,7 +64,9 @@ def p_program_one(p):
 			| CLASSDEF semi'''
 	if len(p) == 4:
 		# p[0] = p[1] + p[2]
-		p[0] = p[1].append(p[2])
+		classes = p[1]
+		classes.append(p[2])
+		p[0] = classes
 	else:	
 		# p[0] = p[1]
 		p[0] = [p[1]]
@@ -100,10 +102,17 @@ def p_feature_helper(p):
 				| FEATURELIT'''
 	if len(p) == 4:
 		# p[0] = p[1] + p[3]
-		for elem in p:
-			print(elem)
-		if p[1]:
-			p[0] = p[1].append(p[3])
+		if p[1] and p[3]:
+			# print 'p1: {} and p3: {}'.format(p[1], p[3])
+			features = p[1]
+			features.append(p[3])
+			p[0] = features
+		elif p[1]:
+			# print 'p1: {}'.format(p[1])
+			p[0] = p[1]
+		elif p[3]:
+			# print 'p3: {}'.format(p[3])
+			p[0] = [p[3]]
 	else:
 		# p[0] = p[1]
 		p[0] = [p[1]]
@@ -134,14 +143,17 @@ def p_feature(p):
 		# p[0] = p[3] + p[8]
 		formals = p[3]
 		expr = p[8]
-		p[0] = Node("method", formals.append(expr), "identifier lparen FORMAL rparen colon type lbrace EXPR rbrace")
+		formals.append(expr)
+		p[0] = Node("method", formals, "identifier lparen FORMAL rparen colon type lbrace EXPR rbrace")
 
 def p_formal(p):
 	'''FORMAL : FORMAL comma FORMALLIT
 			| FORMALLIT'''
 	if len(p) == 4:
 		# p[0] = p[1] + p[3]
-		p[0] = p[1].append(p[3])
+		formals = p[1]
+		formals.append(p[3])
+		p[0] = formals
 	else:
 		# p[0] = p[1]
 		p[0] = [p[1]]
@@ -167,7 +179,9 @@ def p_case_helper(p):
 					| CASELIT'''
 	if len(p) == 3:
 		# p[0] = p[1] + p[2]
-		p[0] = p[1].append(p[2])
+		cases = p[1]
+		cases.append(p[2])
+		p[0] = cases
 	else:
 		# p[0] = p[1]
 		p[0] = [p[1]]
@@ -211,7 +225,9 @@ def p_expr_let(p):
 			'''	
 	if len(p) == 8:
 		expression_node = Node("expression", [p[7]], "EXPR")
-		p[0] = Node("let_statement_not_binding", p[5].append(expression_node), "let identifier colon type LETHELPER in EXPR")
+		lets = p[5]
+		lets.append(expression_node)
+		p[0] = Node("let_statement_not_binding", lets , "let identifier colon type LETHELPER in EXPR")
 		# p[0] = p[5] + p[7]
 	elif len(p) == 10:
 		expression_node = Node("expression", [p[9]], "EXPR")
@@ -225,14 +241,16 @@ def p_expr_let(p):
 		p[0] = let_statement_node
 	else:
 		# p[0] = p[6] + p[8]
-		let_statement_node = Node("let_statement_binding", [p[6], p[8]])
+		let_statement_node = Node("let_statement_binding", [p[6], p[8]], "let identifier colon type larrow EXPR in EXPR")
 		p[0] = let_statement_node
 
 def p_let_helper(p):
 	'''LETHELPER : comma LETHELPERLIT LETHELPER
 				| comma LETHELPERLIT'''
 	if len(p) == 4:
-		p[0] = p[2].append(p[3])
+		lets = p[2]
+		lets.append(p[3])
+		p[0] = lets
 	else:
 		p[0] = p[2]
 
@@ -295,7 +313,9 @@ def p_expr_list_comma(p):
 	'''EXPRLISTCOMMA : EXPRLISTCOMMA comma EXPR
 			| EXPR'''
 	if len(p) == 4:
-		p[0] = p[1].append(Node("expression", [p[3]], "EXPRLISTCOMMA comma EXPR"))
+		exprs = p[1]
+		exprs.append(Node("expression", [p[3]], "EXPRLISTCOMMA comma EXPR"))
+		p[0] = exprs
 	else:
 		p[0] = [Node("expression", [p[1]], "EXPR")]
 
@@ -304,7 +324,9 @@ def p_expr_list_semi(p):
 			| EXPR'''
 	if len(p) == 4:
 		if p[1]:
-			p[0] = p[1].append( Node("express", [p[3]], "EXPRLISTSEMI semi EXPR"))
+			exprs = p[1]
+			exprs.append( Node("express", [p[3]], "EXPRLISTSEMI semi EXPR"))
+			p[0] = exprs
 	else:
 		p[0] = [Node("expression", [p[1]], "EXPR")]
 
@@ -340,7 +362,7 @@ def p_expr_terminal(p):
 	
 
 def recurce_tree(tree):
-	print "Type: {}\nValue: {}\n\n".format(tree.type, tree.leaf)
+	print tree
 	if not len(tree.children):
 		return
 	for child in tree.children:
