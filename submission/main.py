@@ -527,7 +527,7 @@ def p_error(p):
 	if p is None:
 		# print "Error is None"
 		# print "Root: {}".format(ast.type)
-		pass
+		print "BLAH"
 		# exit()
 	else:
 		print "ERROR: {}: Syntax Error".format(p.line_no)

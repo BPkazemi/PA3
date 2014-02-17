@@ -1,7 +1,7 @@
 1
 27
 Main
-inherits 
+inherits
 27
 IO
 6
@@ -14,7 +14,7 @@ Int
 31
 integer
 0
-attribute_init 
+attribute_init
 34
 out
 34
@@ -33,7 +33,7 @@ string
 37
 integer
 2
-attribute_init 
+attribute_init
 40
 testee
 40
@@ -42,12 +42,12 @@ Int
 identifier
 40
 out
-attribute_no_init 
+attribute_no_init
 42
 divisor
 42
 Int
-attribute_init 
+attribute_init
 44
 stop
 44
@@ -55,7 +55,7 @@ Int
 44
 integer
 500
-attribute_init 
+attribute_init
 46
 m
 46

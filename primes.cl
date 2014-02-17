@@ -48,7 +48,7 @@ class Main inherits IO {
       {
 
         testee <- testee + 1;
-        divisor <- 2;
+        divisor <- true;
 
         while 
           if testee < divisor * divisor 

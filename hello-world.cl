@@ -6,19 +6,7 @@ class Main inherits IO {
     out_string("Hello, world.\n")
   } ;
 
-  testee : Int <- 4;
+  testee : Int <- new Blah;
 
-
-} ;
-
-class Main inherits IO {
-  main() : Object {
-    out_string("Hello, world.\n")
-  } ;
-  main() : Object {
-    out_string("Hello, world.\n")
-  } ;
-
-  testee : Int <- 4;
 
 } ;

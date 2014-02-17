@@ -1,5 +1,4 @@
-import ply.lex as lex
-import Queue
+import lex
 
 class Token:
 	'''
@@ -31,7 +30,7 @@ class Lexer:
 	)
 
 	def __init__(self):
-		self.tokens = Queue.Queue()
+		self.tokens = []
 
 	def add_token(self, token_type, line_no, value=None):
 		if token_type in self.token_types:
@@ -44,10 +43,12 @@ class Lexer:
 		else:
 			print 'Invalid Token Type'
 			return
-		self.tokens.put(t)
+		self.tokens.append(t)
 
 	def token(self):
-		if self.tokens.empty():
+		if not self.tokens:
 			return None
 		else:
-			return self.tokens.get()
+			elem = self.tokens[0]
+			del(self.tokens[0])
+			return elem
