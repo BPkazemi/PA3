@@ -28,7 +28,7 @@ class Token:
 		self.value = (token_type, value, line_no)
 
 	def __repr__(self):
-		return "Token{}".format(self.value)
+		return "Token{0}".format(self.value)
 
 
 class Lexer:
@@ -82,7 +82,7 @@ class Node:
 		self.leaf = leaf
 
 	def __repr__(self):
-		return "Type: {}, num_children: {}, value: {}".format(self.type, len(self.children), self.leaf)
+		return "Type: {0}, num_children: {1}, value: {2}".format(self.type, len(self.children), self.leaf)
 
 ########### Parser (token -> AST) #############
 
@@ -384,7 +384,7 @@ def p_expr_terminal(p):
 	
 
 def print_tree(tree, depth):
-	print "--"*depth, "Body: {}".format(tree)
+	print "--"*depth, "Body: {0}".format(tree)
 	if not len(tree.children):
 		return
 	for child in tree.children:
@@ -393,30 +393,30 @@ def print_tree(tree, depth):
 output = ""
 
 def output_as_identifier(value):
-	return "{}\n{}\n".format(value[2], value[1])
+	return "{0}\n{1}\n".format(value[2], value[1])
 
 def recurce_tree(tree):
 	global output
 	if tree.type == "Program":
 		# Output list of classes
-		output += "{}\n".format(len(tree.children))
+		output += "{0}\n".format(len(tree.children))
 		# f.write()
 	elif tree.type == "class_inherits":
 		output += output_as_identifier(tree.leaf)
 		output += "inherits \n"
 		output += output_as_identifier(tree.leaf[3])
-		output += "{}\n".format(len(tree.children))
+		output += "{0}\n".format(len(tree.children))
 		# f.write(output)
 	elif tree.type == "class_no_inherits":
 		output += output_as_identifier(tree.leaf)
 		output += "no_inherits \n"
-		output += "{}\n".format(len(tree.children))
+		output += "{0}\n".format(len(tree.children))
 		# f.write(output)
 	elif tree.type == "method":
 		output += "method\n"
 		output += output_as_identifier(tree.leaf["identifier"])
 		# f.write(output)
-		output += "{}\n".format(len(tree.leaf["formals"]))
+		output += "{0}\n".format(len(tree.leaf["formals"]))
 		for formal in tree.leaf["formals"]:
 			recurce_tree(formal, f)
 		output += output_as_identifier(tree.leaf["type"])
@@ -437,64 +437,64 @@ def recurce_tree(tree):
 		output += output_as_identifier(tree.leaf[1])
 		# f.write(output)
 	elif tree.type == "integer" or tree.type == "string" :
-		output += "{}\n{}\n{}\n".format(tree.leaf[2], tree.leaf[0], tree.leaf[1])
+		output += "{0}\n{1}\n{2}\n".format(tree.leaf[2], tree.leaf[0], tree.leaf[1])
 		# f.write(output)
 	elif tree.type == "true" or tree.type == "false":
-		output += "{}\n{}\n".format(tree.leaf[2], tree.leaf[0])
+		output += "{0}\n{1}\n".format(tree.leaf[2], tree.leaf[0])
 		# f.write(output)
 	elif tree.type == "identifier":
-		output += "{}\n{}\n{}".format(tree.leaf[2], tree.leaf[0], output_as_identifier(tree.leaf))
+		output += "{0}\n{1}\n{2}".format(tree.leaf[2], tree.leaf[0], output_as_identifier(tree.leaf))
 		# f.write(output)
 	elif tree.type == "not" or tree.type == "isvoid":
-		output += "{}\n{}\n".format(tree.leaf[2], tree.leaf[0])
+		output += "{0}\n{1}\n".format(tree.leaf[2], tree.leaf[0])
 		# f.write(output)
 	elif tree.type == "tilde":
-		output += "{}\n{}\n".format(tree.leaf[2], "negate")
+		output += "{0}\n{1}\n".format(tree.leaf[2], "negate")
 		# f.write(output)
 	elif tree.type in ["plus", "minus", "times", "divide", "lt", "le"]:
-		output += "{}\n{}\n".format(tree.leaf[2], tree.leaf[0])
+		output += "{0}\n{1}\n".format(tree.leaf[2], tree.leaf[0])
 	elif tree.type == "equals":
-		output += "{}\n{}\n".format(tree.leaf[2], "eq")
+		output += "{0}\n{1}\n".format(tree.leaf[2], "eq")
 	elif tree.type == "new":
-		output += "{}\n{}\n{}".format(tree.leaf[0][2], tree.leaf[0][0], output_as_identifier(tree.leaf[1]))
+		output += "{0}\n{1}\n{2}".format(tree.leaf[0][2], tree.leaf[0][0], output_as_identifier(tree.leaf[1]))
 	elif tree.type == "block":
-		output += "{}\n{}\n".format(tree.leaf[2], "block")
-		output += "{}\n".format(len(tree.children))
+		output += "{0}\n{1}\n".format(tree.leaf[2], "block")
+		output += "{0}\n".format(len(tree.children))
 	elif tree.type == "while":
-		output += "{}\nwhile\n".format(tree.leaf[2])
+		output += "{0}\nwhile\n".format(tree.leaf[2])
 	elif tree.type == "if":
-		output += "{}\nif\n".format(tree.leaf[2])
+		output += "{0}\nif\n".format(tree.leaf[2])
 	elif tree.type == "assign":
-		output += "{}\nassign\n{}".format(tree.leaf[2], output_as_identifier(tree.leaf))
+		output += "{0}\nassign\n{1}".format(tree.leaf[2], output_as_identifier(tree.leaf))
 	elif tree.type == "static_dispatch":
-		output += "{}\nstatic_dispatch\n".format(tree.leaf["expression"].leaf[2])
+		output += "{0}\nstatic_dispatch\n".format(tree.leaf["expression"].leaf[2])
 		recurce_tree(tree.leaf["expression"])
-		output += "{}{}".format(output_as_identifier(tree.leaf["type"]), output_as_identifier(tree.leaf["method"]))
-		output += "{}\n".format(len(tree.children))
+		output += "{0}{1}".format(output_as_identifier(tree.leaf["type"]), output_as_identifier(tree.leaf["method"]))
+		output += "{0}\n".format(len(tree.children))
 	elif tree.type == "dynamic_dispatch":
-		output += "{}\ndynamic_dispatch\n".format(tree.leaf["expression"].leaf[2])
+		output += "{0}\ndynamic_dispatch\n".format(tree.leaf["expression"].leaf[2])
 		recurce_tree(tree.leaf["expression"])
 		output += output_as_identifier(tree.leaf["method"])
-		output += "{}\n".format(len(tree.children))
+		output += "{0}\n".format(len(tree.children))
 	elif tree.type == "self_dispatch":
-		output += "{}\nself_dispatch\n{}".format(tree.leaf[2], output_as_identifier(tree.leaf))
-		output += "{}\n".format(len(tree.children))
+		output += "{0}\nself_dispatch\n{1}".format(tree.leaf[2], output_as_identifier(tree.leaf))
+		output += "{0}\n".format(len(tree.children))
 	elif tree.type == "let_statement":
-		output += "{}\nlet\n{}\n".format(tree.leaf["let"][2], len(tree.leaf["bindings"]))
+		output += "{0}\nlet\n{1}\n".format(tree.leaf["let"][2], len(tree.leaf["bindings"]))
 		for elem in tree.leaf["bindings"]:
 			recurce_tree(elem)
 	elif tree.type == "let_binding_no_init":
-		output += "let_binding_no_init\n{}{}".format(output_as_identifier(tree.leaf["identifier"],
+		output += "let_binding_no_init\n{0}{1}".format(output_as_identifier(tree.leaf["identifier"],
 														output_as_identifier(tree.leaf["type"])))
 	elif tree.type == "let_binding_init":
-		output += "let_binding_init\n{}{}".format(output_as_identifier(tree.leaf["identifier"],
+		output += "let_binding_init\n{0}{1}".format(output_as_identifier(tree.leaf["identifier"],
 													output_as_identifier(tree.leaf["type"])))
 	elif tree.type == "case":
-		output += "{}\ncase\n".format(tree.leaf[0][2])
+		output += "{0}\ncase\n".format(tree.leaf[0][2])
 		recurce_tree(tree.leaf[1])
-		output += "{}\n".format(len(tree.children))
+		output += "{0}\n".format(len(tree.children))
 	elif tree.type == "case_element":
-		output += "{}{}".format(tree.leaf[0], tree.leaf[1])
+		output += "{0}{1}".format(tree.leaf[0], tree.leaf[1])
 	if not tree.children:
 		return
 	for elem in tree.children:
@@ -511,7 +511,7 @@ def output_ast(tree, fname):
 
 
 def output_list(acc, num_chillens, value):
-	acc += "{}\n".format(num_chillens)
+	acc += "{0}\n".format(num_chillens)
 	return acc
 
 def output_class(acc, num_chillens, value, inherits=None):
@@ -530,7 +530,7 @@ def p_error(p):
 		pass
 		# exit()
 	else:
-		print "ERROR: {}: Syntax Error".format(p.line_no)
+		print "ERROR: {0}: Syntax Error".format(p.line_no)
 		exit()
 
 def read_tokens_create_lexer(filename):
