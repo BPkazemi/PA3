@@ -1,154 +1,4323 @@
 Created by PLY version 3.4 (http://www.dabeaz.com/ply)
 
-Unused terminals:
-
-    inherits
-    fi
-    false
-    rbrace
-    in
-    colon
-    at
-    tilde
-    divide
-    le
-    rarrow
-    isvoid
-    larrow
-    lt
-    esac
-    new
-    if
-    type
-    then
-    string
-    equals
-    else
-    let
-    lparen
-    not
-    true
-    class
-    pool
-    case
-    lbrace
-    rparen
-    semi
-    of
-    times
-    while
-    loop
-    comma
-    identifier
-    minus
-    dot
-
 Grammar
 
-Rule 0     S' -> expression
-Rule 1     expression -> expression plus expression
-Rule 2     expression -> integer
+Rule 0     S' -> PROGRAM
+Rule 1     PROGRAM -> CLASSDEF semi
+Rule 2     PROGRAM -> PROGRAM CLASSDEF semi
+Rule 3     CLASSDEF -> class type lbrace rbrace
+Rule 4     CLASSDEF -> class type lbrace FEATURE semi rbrace
+Rule 5     CLASSDEF -> class type inherits type lbrace rbrace
+Rule 6     CLASSDEF -> class type inherits type lbrace FEATURE semi rbrace
+Rule 7     FEATURELIT -> identifier lparen FORMAL rparen colon type lbrace EXPR rbrace
+Rule 8     FEATURELIT -> identifier lparen rparen colon type lbrace EXPR rbrace
+Rule 9     FEATURELIT -> identifier colon type
+Rule 10    FEATURELIT -> identifier colon type larrow EXPR
+Rule 11    FEATURE -> FEATURE semi FEATURELIT
+Rule 12    FEATURE -> FEATURELIT
+Rule 13    FEATURELIST -> FEATURE semi FEATURELIST
+Rule 14    FEATURELIST -> <empty>
+Rule 15    FORMAL -> FORMAL comma FORMALLIT
+Rule 16    FORMAL -> FORMALLIT
+Rule 17    FORMALLIT -> identifier colon type
+Rule 18    EXPR -> case EXPR of CASEHELPER esac
+Rule 19    CASEHELPER -> CASEHELPER CASELIT
+Rule 20    CASEHELPER -> CASELIT
+Rule 21    CASELIT -> identifier colon type rarrow EXPR semi
+Rule 22    EXPR -> EXPR at type dot identifier lparen rparen
+Rule 23    EXPR -> EXPR dot identifier lparen rparen
+Rule 24    EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+Rule 25    EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen
+Rule 26    EXPR -> let identifier colon type LETHELPER in EXPR
+Rule 27    EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR
+Rule 28    EXPR -> let identifier colon type in EXPR
+Rule 29    EXPR -> let identifier colon type larrow EXPR in EXPR
+Rule 30    LETHELPER -> comma LETHELPERLIT LETHELPER
+Rule 31    LETHELPER -> comma LETHELPERLIT
+Rule 32    LETHELPERLIT -> identifier colon type
+Rule 33    LETHELPERLIT -> identifier colon type larrow EXPR
+Rule 34    EXPR -> lparen EXPR rparen
+Rule 35    EXPR -> lbrace EXPRLISTSEMI semi rbrace
+Rule 36    EXPR -> identifier lparen rparen
+Rule 37    EXPR -> identifier lparen EXPRLISTCOMMA rparen
+Rule 38    EXPR -> identifier larrow EXPR
+Rule 39    EXPR -> if EXPR then EXPR else EXPR fi
+Rule 40    EXPR -> while EXPR loop EXPR pool
+Rule 41    EXPRLISTCOMMA -> EXPRLISTCOMMA comma EXPR
+Rule 42    EXPRLISTCOMMA -> EXPR
+Rule 43    EXPRLISTSEMI -> EXPRLISTSEMI semi EXPR
+Rule 44    EXPRLISTSEMI -> EXPR
+Rule 45    EXPR -> isvoid EXPR
+Rule 46    EXPR -> tilde EXPR
+Rule 47    EXPR -> not EXPR
+Rule 48    EXPR -> EXPR plus EXPR
+Rule 49    EXPR -> EXPR minus EXPR
+Rule 50    EXPR -> EXPR times EXPR
+Rule 51    EXPR -> EXPR divide EXPR
+Rule 52    EXPR -> EXPR lt EXPR
+Rule 53    EXPR -> EXPR le EXPR
+Rule 54    EXPR -> EXPR equals EXPR
+Rule 55    EXPR -> identifier
+Rule 56    EXPR -> integer
+Rule 57    EXPR -> string
+Rule 58    EXPR -> true
+Rule 59    EXPR -> false
+Rule 60    EXPR -> new type
 
 Terminals, with rules where they appear
 
-at                   : 
-case                 : 
-class                : 
-colon                : 
-comma                : 
-divide               : 
-dot                  : 
-else                 : 
-equals               : 
+at                   : 22 24
+case                 : 18
+class                : 3 4 5 6
+colon                : 7 8 9 10 17 21 26 27 28 29 32 33
+comma                : 15 30 31 41
+divide               : 51
+dot                  : 22 23 24 25
+else                 : 39
+equals               : 54
 error                : 
-esac                 : 
-false                : 
-fi                   : 
-identifier           : 
-if                   : 
-in                   : 
-inherits             : 
-integer              : 2
-isvoid               : 
-larrow               : 
-lbrace               : 
-le                   : 
-let                  : 
-loop                 : 
-lparen               : 
-lt                   : 
-minus                : 
-new                  : 
-not                  : 
-of                   : 
-plus                 : 1
-pool                 : 
-rarrow               : 
-rbrace               : 
-rparen               : 
-semi                 : 
-string               : 
-then                 : 
-tilde                : 
-times                : 
-true                 : 
-type                 : 
-while                : 
+esac                 : 18
+false                : 59
+fi                   : 39
+identifier           : 7 8 9 10 17 21 22 23 24 25 26 27 28 29 32 33 36 37 38 55
+if                   : 39
+in                   : 26 27 28 29
+inherits             : 5 6
+integer              : 56
+isvoid               : 45
+larrow               : 10 27 29 33 38
+lbrace               : 3 4 5 6 7 8 35
+le                   : 53
+let                  : 26 27 28 29
+loop                 : 40
+lparen               : 7 8 22 23 24 25 34 36 37
+lt                   : 52
+minus                : 49
+new                  : 60
+not                  : 47
+of                   : 18
+plus                 : 48
+pool                 : 40
+rarrow               : 21
+rbrace               : 3 4 5 6 7 8 35
+rparen               : 7 8 22 23 24 25 34 36 37
+semi                 : 1 2 4 6 11 13 21 35 43
+string               : 57
+then                 : 39
+tilde                : 46
+times                : 50
+true                 : 58
+type                 : 3 4 5 5 6 6 7 8 9 10 17 21 22 24 26 27 28 29 32 33 60
+while                : 40
 
 Nonterminals, with rules where they appear
 
-expression           : 1 1 0
+CASEHELPER           : 18 19
+CASELIT              : 19 20
+CLASSDEF             : 1 2
+EXPR                 : 7 8 10 18 21 22 23 24 25 26 27 27 28 29 29 33 34 38 39 39 39 40 40 41 42 43 44 45 46 47 48 48 49 49 50 50 51 51 52 52 53 53 54 54
+EXPRLISTCOMMA        : 24 25 37 41
+EXPRLISTSEMI         : 35 43
+FEATURE              : 4 6 11 13
+FEATURELIST          : 13
+FEATURELIT           : 11 12
+FORMAL               : 7 15
+FORMALLIT            : 15 16
+LETHELPER            : 26 27 30
+LETHELPERLIT         : 30 31
+PROGRAM              : 2 0
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . expression
-    (1) expression -> . expression plus expression
-    (2) expression -> . integer
+    (0) S' -> . PROGRAM
+    (1) PROGRAM -> . CLASSDEF semi
+    (2) PROGRAM -> . PROGRAM CLASSDEF semi
+    (3) CLASSDEF -> . class type lbrace rbrace
+    (4) CLASSDEF -> . class type lbrace FEATURE semi rbrace
+    (5) CLASSDEF -> . class type inherits type lbrace rbrace
+    (6) CLASSDEF -> . class type inherits type lbrace FEATURE semi rbrace
 
-    integer         shift and go to state 2
+    class           shift and go to state 3
 
-    expression                     shift and go to state 1
+    PROGRAM                        shift and go to state 2
+    CLASSDEF                       shift and go to state 1
 
 state 1
 
-    (0) S' -> expression .
-    (1) expression -> expression . plus expression
+    (1) PROGRAM -> CLASSDEF . semi
 
-    plus            shift and go to state 3
+    semi            shift and go to state 4
 
 
 state 2
 
-    (2) expression -> integer .
+    (0) S' -> PROGRAM .
+    (2) PROGRAM -> PROGRAM . CLASSDEF semi
+    (3) CLASSDEF -> . class type lbrace rbrace
+    (4) CLASSDEF -> . class type lbrace FEATURE semi rbrace
+    (5) CLASSDEF -> . class type inherits type lbrace rbrace
+    (6) CLASSDEF -> . class type inherits type lbrace FEATURE semi rbrace
 
-    plus            reduce using rule 2 (expression -> integer .)
-    $end            reduce using rule 2 (expression -> integer .)
+    class           shift and go to state 3
 
+    CLASSDEF                       shift and go to state 5
 
 state 3
 
-    (1) expression -> expression plus . expression
-    (1) expression -> . expression plus expression
-    (2) expression -> . integer
+    (3) CLASSDEF -> class . type lbrace rbrace
+    (4) CLASSDEF -> class . type lbrace FEATURE semi rbrace
+    (5) CLASSDEF -> class . type inherits type lbrace rbrace
+    (6) CLASSDEF -> class . type inherits type lbrace FEATURE semi rbrace
 
-    integer         shift and go to state 2
+    type            shift and go to state 6
 
-    expression                     shift and go to state 4
 
 state 4
 
-    (1) expression -> expression plus expression .
-    (1) expression -> expression . plus expression
+    (1) PROGRAM -> CLASSDEF semi .
 
+    class           reduce using rule 1 (PROGRAM -> CLASSDEF semi .)
+    $end            reduce using rule 1 (PROGRAM -> CLASSDEF semi .)
+
+
+state 5
+
+    (2) PROGRAM -> PROGRAM CLASSDEF . semi
+
+    semi            shift and go to state 7
+
+
+state 6
+
+    (3) CLASSDEF -> class type . lbrace rbrace
+    (4) CLASSDEF -> class type . lbrace FEATURE semi rbrace
+    (5) CLASSDEF -> class type . inherits type lbrace rbrace
+    (6) CLASSDEF -> class type . inherits type lbrace FEATURE semi rbrace
+
+    lbrace          shift and go to state 9
+    inherits        shift and go to state 8
+
+
+state 7
+
+    (2) PROGRAM -> PROGRAM CLASSDEF semi .
+
+    class           reduce using rule 2 (PROGRAM -> PROGRAM CLASSDEF semi .)
+    $end            reduce using rule 2 (PROGRAM -> PROGRAM CLASSDEF semi .)
+
+
+state 8
+
+    (5) CLASSDEF -> class type inherits . type lbrace rbrace
+    (6) CLASSDEF -> class type inherits . type lbrace FEATURE semi rbrace
+
+    type            shift and go to state 10
+
+
+state 9
+
+    (3) CLASSDEF -> class type lbrace . rbrace
+    (4) CLASSDEF -> class type lbrace . FEATURE semi rbrace
+    (11) FEATURE -> . FEATURE semi FEATURELIT
+    (12) FEATURE -> . FEATURELIT
+    (7) FEATURELIT -> . identifier lparen FORMAL rparen colon type lbrace EXPR rbrace
+    (8) FEATURELIT -> . identifier lparen rparen colon type lbrace EXPR rbrace
+    (9) FEATURELIT -> . identifier colon type
+    (10) FEATURELIT -> . identifier colon type larrow EXPR
+
+    rbrace          shift and go to state 11
+    identifier      shift and go to state 14
+
+    FEATURELIT                     shift and go to state 13
+    FEATURE                        shift and go to state 12
+
+state 10
+
+    (5) CLASSDEF -> class type inherits type . lbrace rbrace
+    (6) CLASSDEF -> class type inherits type . lbrace FEATURE semi rbrace
+
+    lbrace          shift and go to state 15
+
+
+state 11
+
+    (3) CLASSDEF -> class type lbrace rbrace .
+
+    semi            reduce using rule 3 (CLASSDEF -> class type lbrace rbrace .)
+
+
+state 12
+
+    (4) CLASSDEF -> class type lbrace FEATURE . semi rbrace
+    (11) FEATURE -> FEATURE . semi FEATURELIT
+
+    semi            shift and go to state 16
+
+
+state 13
+
+    (12) FEATURE -> FEATURELIT .
+
+    semi            reduce using rule 12 (FEATURE -> FEATURELIT .)
+
+
+state 14
+
+    (7) FEATURELIT -> identifier . lparen FORMAL rparen colon type lbrace EXPR rbrace
+    (8) FEATURELIT -> identifier . lparen rparen colon type lbrace EXPR rbrace
+    (9) FEATURELIT -> identifier . colon type
+    (10) FEATURELIT -> identifier . colon type larrow EXPR
+
+    lparen          shift and go to state 18
+    colon           shift and go to state 17
+
+
+state 15
+
+    (5) CLASSDEF -> class type inherits type lbrace . rbrace
+    (6) CLASSDEF -> class type inherits type lbrace . FEATURE semi rbrace
+    (11) FEATURE -> . FEATURE semi FEATURELIT
+    (12) FEATURE -> . FEATURELIT
+    (7) FEATURELIT -> . identifier lparen FORMAL rparen colon type lbrace EXPR rbrace
+    (8) FEATURELIT -> . identifier lparen rparen colon type lbrace EXPR rbrace
+    (9) FEATURELIT -> . identifier colon type
+    (10) FEATURELIT -> . identifier colon type larrow EXPR
+
+    rbrace          shift and go to state 19
+    identifier      shift and go to state 14
+
+    FEATURELIT                     shift and go to state 13
+    FEATURE                        shift and go to state 20
+
+state 16
+
+    (4) CLASSDEF -> class type lbrace FEATURE semi . rbrace
+    (11) FEATURE -> FEATURE semi . FEATURELIT
+    (7) FEATURELIT -> . identifier lparen FORMAL rparen colon type lbrace EXPR rbrace
+    (8) FEATURELIT -> . identifier lparen rparen colon type lbrace EXPR rbrace
+    (9) FEATURELIT -> . identifier colon type
+    (10) FEATURELIT -> . identifier colon type larrow EXPR
+
+    rbrace          shift and go to state 21
+    identifier      shift and go to state 14
+
+    FEATURELIT                     shift and go to state 22
+
+state 17
+
+    (9) FEATURELIT -> identifier colon . type
+    (10) FEATURELIT -> identifier colon . type larrow EXPR
+
+    type            shift and go to state 23
+
+
+state 18
+
+    (7) FEATURELIT -> identifier lparen . FORMAL rparen colon type lbrace EXPR rbrace
+    (8) FEATURELIT -> identifier lparen . rparen colon type lbrace EXPR rbrace
+    (15) FORMAL -> . FORMAL comma FORMALLIT
+    (16) FORMAL -> . FORMALLIT
+    (17) FORMALLIT -> . identifier colon type
+
+    rparen          shift and go to state 24
+    identifier      shift and go to state 26
+
+    FORMALLIT                      shift and go to state 25
+    FORMAL                         shift and go to state 27
+
+state 19
+
+    (5) CLASSDEF -> class type inherits type lbrace rbrace .
+
+    semi            reduce using rule 5 (CLASSDEF -> class type inherits type lbrace rbrace .)
+
+
+state 20
+
+    (6) CLASSDEF -> class type inherits type lbrace FEATURE . semi rbrace
+    (11) FEATURE -> FEATURE . semi FEATURELIT
+
+    semi            shift and go to state 28
+
+
+state 21
+
+    (4) CLASSDEF -> class type lbrace FEATURE semi rbrace .
+
+    semi            reduce using rule 4 (CLASSDEF -> class type lbrace FEATURE semi rbrace .)
+
+
+state 22
+
+    (11) FEATURE -> FEATURE semi FEATURELIT .
+
+    semi            reduce using rule 11 (FEATURE -> FEATURE semi FEATURELIT .)
+
+
+state 23
+
+    (9) FEATURELIT -> identifier colon type .
+    (10) FEATURELIT -> identifier colon type . larrow EXPR
+
+    semi            reduce using rule 9 (FEATURELIT -> identifier colon type .)
+    larrow          shift and go to state 29
+
+
+state 24
+
+    (8) FEATURELIT -> identifier lparen rparen . colon type lbrace EXPR rbrace
+
+    colon           shift and go to state 30
+
+
+state 25
+
+    (16) FORMAL -> FORMALLIT .
+
+    rparen          reduce using rule 16 (FORMAL -> FORMALLIT .)
+    comma           reduce using rule 16 (FORMAL -> FORMALLIT .)
+
+
+state 26
+
+    (17) FORMALLIT -> identifier . colon type
+
+    colon           shift and go to state 31
+
+
+state 27
+
+    (7) FEATURELIT -> identifier lparen FORMAL . rparen colon type lbrace EXPR rbrace
+    (15) FORMAL -> FORMAL . comma FORMALLIT
+
+    rparen          shift and go to state 32
+    comma           shift and go to state 33
+
+
+state 28
+
+    (6) CLASSDEF -> class type inherits type lbrace FEATURE semi . rbrace
+    (11) FEATURE -> FEATURE semi . FEATURELIT
+    (7) FEATURELIT -> . identifier lparen FORMAL rparen colon type lbrace EXPR rbrace
+    (8) FEATURELIT -> . identifier lparen rparen colon type lbrace EXPR rbrace
+    (9) FEATURELIT -> . identifier colon type
+    (10) FEATURELIT -> . identifier colon type larrow EXPR
+
+    rbrace          shift and go to state 34
+    identifier      shift and go to state 14
+
+    FEATURELIT                     shift and go to state 22
+
+state 29
+
+    (10) FEATURELIT -> identifier colon type larrow . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 39
+
+state 30
+
+    (8) FEATURELIT -> identifier lparen rparen colon . type lbrace EXPR rbrace
+
+    type            shift and go to state 51
+
+
+state 31
+
+    (17) FORMALLIT -> identifier colon . type
+
+    type            shift and go to state 52
+
+
+state 32
+
+    (7) FEATURELIT -> identifier lparen FORMAL rparen . colon type lbrace EXPR rbrace
+
+    colon           shift and go to state 53
+
+
+state 33
+
+    (15) FORMAL -> FORMAL comma . FORMALLIT
+    (17) FORMALLIT -> . identifier colon type
+
+    identifier      shift and go to state 26
+
+    FORMALLIT                      shift and go to state 54
+
+state 34
+
+    (6) CLASSDEF -> class type inherits type lbrace FEATURE semi rbrace .
+
+    semi            reduce using rule 6 (CLASSDEF -> class type inherits type lbrace FEATURE semi rbrace .)
+
+
+state 35
+
+    (59) EXPR -> false .
+
+    at              reduce using rule 59 (EXPR -> false .)
+    dot             reduce using rule 59 (EXPR -> false .)
+    plus            reduce using rule 59 (EXPR -> false .)
+    minus           reduce using rule 59 (EXPR -> false .)
+    times           reduce using rule 59 (EXPR -> false .)
+    divide          reduce using rule 59 (EXPR -> false .)
+    lt              reduce using rule 59 (EXPR -> false .)
+    le              reduce using rule 59 (EXPR -> false .)
+    equals          reduce using rule 59 (EXPR -> false .)
+    rparen          reduce using rule 59 (EXPR -> false .)
+    comma           reduce using rule 59 (EXPR -> false .)
+    semi            reduce using rule 59 (EXPR -> false .)
+    then            reduce using rule 59 (EXPR -> false .)
+    of              reduce using rule 59 (EXPR -> false .)
+    loop            reduce using rule 59 (EXPR -> false .)
+    rbrace          reduce using rule 59 (EXPR -> false .)
+    else            reduce using rule 59 (EXPR -> false .)
+    pool            reduce using rule 59 (EXPR -> false .)
+    fi              reduce using rule 59 (EXPR -> false .)
+    in              reduce using rule 59 (EXPR -> false .)
+
+
+state 36
+
+    (46) EXPR -> tilde . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 55
+
+state 37
+
+    (39) EXPR -> if . EXPR then EXPR else EXPR fi
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 56
+
+state 38
+
+    (56) EXPR -> integer .
+
+    at              reduce using rule 56 (EXPR -> integer .)
+    dot             reduce using rule 56 (EXPR -> integer .)
+    plus            reduce using rule 56 (EXPR -> integer .)
+    minus           reduce using rule 56 (EXPR -> integer .)
+    times           reduce using rule 56 (EXPR -> integer .)
+    divide          reduce using rule 56 (EXPR -> integer .)
+    lt              reduce using rule 56 (EXPR -> integer .)
+    le              reduce using rule 56 (EXPR -> integer .)
+    equals          reduce using rule 56 (EXPR -> integer .)
+    rparen          reduce using rule 56 (EXPR -> integer .)
+    comma           reduce using rule 56 (EXPR -> integer .)
+    semi            reduce using rule 56 (EXPR -> integer .)
+    then            reduce using rule 56 (EXPR -> integer .)
+    of              reduce using rule 56 (EXPR -> integer .)
+    loop            reduce using rule 56 (EXPR -> integer .)
+    rbrace          reduce using rule 56 (EXPR -> integer .)
+    else            reduce using rule 56 (EXPR -> integer .)
+    pool            reduce using rule 56 (EXPR -> integer .)
+    fi              reduce using rule 56 (EXPR -> integer .)
+    in              reduce using rule 56 (EXPR -> integer .)
+
+
+state 39
+
+    (10) FEATURELIT -> identifier colon type larrow EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    semi            reduce using rule 10 (FEATURELIT -> identifier colon type larrow EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+
+state 40
+
+    (45) EXPR -> isvoid . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 66
+
+state 41
+
+    (57) EXPR -> string .
+
+    at              reduce using rule 57 (EXPR -> string .)
+    dot             reduce using rule 57 (EXPR -> string .)
+    plus            reduce using rule 57 (EXPR -> string .)
+    minus           reduce using rule 57 (EXPR -> string .)
+    times           reduce using rule 57 (EXPR -> string .)
+    divide          reduce using rule 57 (EXPR -> string .)
+    lt              reduce using rule 57 (EXPR -> string .)
+    le              reduce using rule 57 (EXPR -> string .)
+    equals          reduce using rule 57 (EXPR -> string .)
+    rparen          reduce using rule 57 (EXPR -> string .)
+    comma           reduce using rule 57 (EXPR -> string .)
+    semi            reduce using rule 57 (EXPR -> string .)
+    then            reduce using rule 57 (EXPR -> string .)
+    of              reduce using rule 57 (EXPR -> string .)
+    loop            reduce using rule 57 (EXPR -> string .)
+    rbrace          reduce using rule 57 (EXPR -> string .)
+    else            reduce using rule 57 (EXPR -> string .)
+    pool            reduce using rule 57 (EXPR -> string .)
+    fi              reduce using rule 57 (EXPR -> string .)
+    in              reduce using rule 57 (EXPR -> string .)
+
+
+state 42
+
+    (26) EXPR -> let . identifier colon type LETHELPER in EXPR
+    (27) EXPR -> let . identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> let . identifier colon type in EXPR
+    (29) EXPR -> let . identifier colon type larrow EXPR in EXPR
+
+    identifier      shift and go to state 67
+
+
+state 43
+
+    (34) EXPR -> lparen . EXPR rparen
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 68
+
+state 44
+
+    (60) EXPR -> new . type
+
+    type            shift and go to state 69
+
+
+state 45
+
+    (47) EXPR -> not . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 70
+
+state 46
+
+    (58) EXPR -> true .
+
+    at              reduce using rule 58 (EXPR -> true .)
+    dot             reduce using rule 58 (EXPR -> true .)
+    plus            reduce using rule 58 (EXPR -> true .)
+    minus           reduce using rule 58 (EXPR -> true .)
+    times           reduce using rule 58 (EXPR -> true .)
+    divide          reduce using rule 58 (EXPR -> true .)
+    lt              reduce using rule 58 (EXPR -> true .)
+    le              reduce using rule 58 (EXPR -> true .)
+    equals          reduce using rule 58 (EXPR -> true .)
+    rparen          reduce using rule 58 (EXPR -> true .)
+    comma           reduce using rule 58 (EXPR -> true .)
+    semi            reduce using rule 58 (EXPR -> true .)
+    then            reduce using rule 58 (EXPR -> true .)
+    of              reduce using rule 58 (EXPR -> true .)
+    loop            reduce using rule 58 (EXPR -> true .)
+    rbrace          reduce using rule 58 (EXPR -> true .)
+    else            reduce using rule 58 (EXPR -> true .)
+    pool            reduce using rule 58 (EXPR -> true .)
+    fi              reduce using rule 58 (EXPR -> true .)
+    in              reduce using rule 58 (EXPR -> true .)
+
+
+state 47
+
+    (18) EXPR -> case . EXPR of CASEHELPER esac
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 71
+
+state 48
+
+    (35) EXPR -> lbrace . EXPRLISTSEMI semi rbrace
+    (43) EXPRLISTSEMI -> . EXPRLISTSEMI semi EXPR
+    (44) EXPRLISTSEMI -> . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 72
+    EXPRLISTSEMI                   shift and go to state 73
+
+state 49
+
+    (40) EXPR -> while . EXPR loop EXPR pool
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 74
+
+state 50
+
+    (36) EXPR -> identifier . lparen rparen
+    (37) EXPR -> identifier . lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> identifier . larrow EXPR
+    (55) EXPR -> identifier .
+
+    lparen          shift and go to state 76
+    larrow          shift and go to state 75
+    at              reduce using rule 55 (EXPR -> identifier .)
+    dot             reduce using rule 55 (EXPR -> identifier .)
+    plus            reduce using rule 55 (EXPR -> identifier .)
+    minus           reduce using rule 55 (EXPR -> identifier .)
+    times           reduce using rule 55 (EXPR -> identifier .)
+    divide          reduce using rule 55 (EXPR -> identifier .)
+    lt              reduce using rule 55 (EXPR -> identifier .)
+    le              reduce using rule 55 (EXPR -> identifier .)
+    equals          reduce using rule 55 (EXPR -> identifier .)
+    rparen          reduce using rule 55 (EXPR -> identifier .)
+    comma           reduce using rule 55 (EXPR -> identifier .)
+    semi            reduce using rule 55 (EXPR -> identifier .)
+    then            reduce using rule 55 (EXPR -> identifier .)
+    of              reduce using rule 55 (EXPR -> identifier .)
+    loop            reduce using rule 55 (EXPR -> identifier .)
+    rbrace          reduce using rule 55 (EXPR -> identifier .)
+    else            reduce using rule 55 (EXPR -> identifier .)
+    pool            reduce using rule 55 (EXPR -> identifier .)
+    fi              reduce using rule 55 (EXPR -> identifier .)
+    in              reduce using rule 55 (EXPR -> identifier .)
+
+
+state 51
+
+    (8) FEATURELIT -> identifier lparen rparen colon type . lbrace EXPR rbrace
+
+    lbrace          shift and go to state 77
+
+
+state 52
+
+    (17) FORMALLIT -> identifier colon type .
+
+    rparen          reduce using rule 17 (FORMALLIT -> identifier colon type .)
+    comma           reduce using rule 17 (FORMALLIT -> identifier colon type .)
+
+
+state 53
+
+    (7) FEATURELIT -> identifier lparen FORMAL rparen colon . type lbrace EXPR rbrace
+
+    type            shift and go to state 78
+
+
+state 54
+
+    (15) FORMAL -> FORMAL comma FORMALLIT .
+
+    rparen          reduce using rule 15 (FORMAL -> FORMAL comma FORMALLIT .)
+    comma           reduce using rule 15 (FORMAL -> FORMAL comma FORMALLIT .)
+
+
+state 55
+
+    (46) EXPR -> tilde EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    plus            reduce using rule 46 (EXPR -> tilde EXPR .)
+    minus           reduce using rule 46 (EXPR -> tilde EXPR .)
+    times           reduce using rule 46 (EXPR -> tilde EXPR .)
+    divide          reduce using rule 46 (EXPR -> tilde EXPR .)
+    lt              reduce using rule 46 (EXPR -> tilde EXPR .)
+    le              reduce using rule 46 (EXPR -> tilde EXPR .)
+    equals          reduce using rule 46 (EXPR -> tilde EXPR .)
+    rparen          reduce using rule 46 (EXPR -> tilde EXPR .)
+    comma           reduce using rule 46 (EXPR -> tilde EXPR .)
+    semi            reduce using rule 46 (EXPR -> tilde EXPR .)
+    then            reduce using rule 46 (EXPR -> tilde EXPR .)
+    of              reduce using rule 46 (EXPR -> tilde EXPR .)
+    loop            reduce using rule 46 (EXPR -> tilde EXPR .)
+    rbrace          reduce using rule 46 (EXPR -> tilde EXPR .)
+    else            reduce using rule 46 (EXPR -> tilde EXPR .)
+    pool            reduce using rule 46 (EXPR -> tilde EXPR .)
+    fi              reduce using rule 46 (EXPR -> tilde EXPR .)
+    in              reduce using rule 46 (EXPR -> tilde EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+
+  ! at              [ reduce using rule 46 (EXPR -> tilde EXPR .) ]
+  ! dot             [ reduce using rule 46 (EXPR -> tilde EXPR .) ]
+  ! plus            [ shift and go to state 63 ]
+  ! minus           [ shift and go to state 64 ]
+  ! times           [ shift and go to state 60 ]
+  ! divide          [ shift and go to state 58 ]
+  ! lt              [ shift and go to state 61 ]
+  ! le              [ shift and go to state 57 ]
+  ! equals          [ shift and go to state 59 ]
+
+
+state 56
+
+    (39) EXPR -> if EXPR . then EXPR else EXPR fi
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    then            shift and go to state 79
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+
+state 57
+
+    (53) EXPR -> EXPR le . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 80
+
+state 58
+
+    (51) EXPR -> EXPR divide . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 81
+
+state 59
+
+    (54) EXPR -> EXPR equals . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 82
+
+state 60
+
+    (50) EXPR -> EXPR times . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 83
+
+state 61
+
+    (52) EXPR -> EXPR lt . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 84
+
+state 62
+
+    (22) EXPR -> EXPR at . type dot identifier lparen rparen
+    (24) EXPR -> EXPR at . type dot identifier lparen EXPRLISTCOMMA rparen
+
+    type            shift and go to state 85
+
+
+state 63
+
+    (48) EXPR -> EXPR plus . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 86
+
+state 64
+
+    (49) EXPR -> EXPR minus . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 87
+
+state 65
+
+    (23) EXPR -> EXPR dot . identifier lparen rparen
+    (25) EXPR -> EXPR dot . identifier lparen EXPRLISTCOMMA rparen
+
+    identifier      shift and go to state 88
+
+
+state 66
+
+    (45) EXPR -> isvoid EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    plus            reduce using rule 45 (EXPR -> isvoid EXPR .)
+    minus           reduce using rule 45 (EXPR -> isvoid EXPR .)
+    times           reduce using rule 45 (EXPR -> isvoid EXPR .)
+    divide          reduce using rule 45 (EXPR -> isvoid EXPR .)
+    lt              reduce using rule 45 (EXPR -> isvoid EXPR .)
+    le              reduce using rule 45 (EXPR -> isvoid EXPR .)
+    equals          reduce using rule 45 (EXPR -> isvoid EXPR .)
+    rparen          reduce using rule 45 (EXPR -> isvoid EXPR .)
+    comma           reduce using rule 45 (EXPR -> isvoid EXPR .)
+    semi            reduce using rule 45 (EXPR -> isvoid EXPR .)
+    then            reduce using rule 45 (EXPR -> isvoid EXPR .)
+    of              reduce using rule 45 (EXPR -> isvoid EXPR .)
+    loop            reduce using rule 45 (EXPR -> isvoid EXPR .)
+    rbrace          reduce using rule 45 (EXPR -> isvoid EXPR .)
+    else            reduce using rule 45 (EXPR -> isvoid EXPR .)
+    pool            reduce using rule 45 (EXPR -> isvoid EXPR .)
+    fi              reduce using rule 45 (EXPR -> isvoid EXPR .)
+    in              reduce using rule 45 (EXPR -> isvoid EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+
+  ! at              [ reduce using rule 45 (EXPR -> isvoid EXPR .) ]
+  ! dot             [ reduce using rule 45 (EXPR -> isvoid EXPR .) ]
+  ! plus            [ shift and go to state 63 ]
+  ! minus           [ shift and go to state 64 ]
+  ! times           [ shift and go to state 60 ]
+  ! divide          [ shift and go to state 58 ]
+  ! lt              [ shift and go to state 61 ]
+  ! le              [ shift and go to state 57 ]
+  ! equals          [ shift and go to state 59 ]
+
+
+state 67
+
+    (26) EXPR -> let identifier . colon type LETHELPER in EXPR
+    (27) EXPR -> let identifier . colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> let identifier . colon type in EXPR
+    (29) EXPR -> let identifier . colon type larrow EXPR in EXPR
+
+    colon           shift and go to state 89
+
+
+state 68
+
+    (34) EXPR -> lparen EXPR . rparen
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    rparen          shift and go to state 90
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+
+state 69
+
+    (60) EXPR -> new type .
+
+    at              reduce using rule 60 (EXPR -> new type .)
+    dot             reduce using rule 60 (EXPR -> new type .)
+    plus            reduce using rule 60 (EXPR -> new type .)
+    minus           reduce using rule 60 (EXPR -> new type .)
+    times           reduce using rule 60 (EXPR -> new type .)
+    divide          reduce using rule 60 (EXPR -> new type .)
+    lt              reduce using rule 60 (EXPR -> new type .)
+    le              reduce using rule 60 (EXPR -> new type .)
+    equals          reduce using rule 60 (EXPR -> new type .)
+    rparen          reduce using rule 60 (EXPR -> new type .)
+    comma           reduce using rule 60 (EXPR -> new type .)
+    semi            reduce using rule 60 (EXPR -> new type .)
+    then            reduce using rule 60 (EXPR -> new type .)
+    of              reduce using rule 60 (EXPR -> new type .)
+    loop            reduce using rule 60 (EXPR -> new type .)
+    rbrace          reduce using rule 60 (EXPR -> new type .)
+    else            reduce using rule 60 (EXPR -> new type .)
+    pool            reduce using rule 60 (EXPR -> new type .)
+    fi              reduce using rule 60 (EXPR -> new type .)
+    in              reduce using rule 60 (EXPR -> new type .)
+
+
+state 70
+
+    (47) EXPR -> not EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    rparen          reduce using rule 47 (EXPR -> not EXPR .)
+    comma           reduce using rule 47 (EXPR -> not EXPR .)
+    semi            reduce using rule 47 (EXPR -> not EXPR .)
+    then            reduce using rule 47 (EXPR -> not EXPR .)
+    of              reduce using rule 47 (EXPR -> not EXPR .)
+    loop            reduce using rule 47 (EXPR -> not EXPR .)
+    rbrace          reduce using rule 47 (EXPR -> not EXPR .)
+    else            reduce using rule 47 (EXPR -> not EXPR .)
+    pool            reduce using rule 47 (EXPR -> not EXPR .)
+    fi              reduce using rule 47 (EXPR -> not EXPR .)
+    in              reduce using rule 47 (EXPR -> not EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+  ! at              [ reduce using rule 47 (EXPR -> not EXPR .) ]
+  ! dot             [ reduce using rule 47 (EXPR -> not EXPR .) ]
+  ! plus            [ reduce using rule 47 (EXPR -> not EXPR .) ]
+  ! minus           [ reduce using rule 47 (EXPR -> not EXPR .) ]
+  ! times           [ reduce using rule 47 (EXPR -> not EXPR .) ]
+  ! divide          [ reduce using rule 47 (EXPR -> not EXPR .) ]
+  ! lt              [ reduce using rule 47 (EXPR -> not EXPR .) ]
+  ! le              [ reduce using rule 47 (EXPR -> not EXPR .) ]
+  ! equals          [ reduce using rule 47 (EXPR -> not EXPR .) ]
+
+
+state 71
+
+    (18) EXPR -> case EXPR . of CASEHELPER esac
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    of              shift and go to state 91
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+
+state 72
+
+    (44) EXPRLISTSEMI -> EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    semi            reduce using rule 44 (EXPRLISTSEMI -> EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+
+state 73
+
+    (35) EXPR -> lbrace EXPRLISTSEMI . semi rbrace
+    (43) EXPRLISTSEMI -> EXPRLISTSEMI . semi EXPR
+
+    semi            shift and go to state 92
+
+
+state 74
+
+    (40) EXPR -> while EXPR . loop EXPR pool
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    loop            shift and go to state 93
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+
+state 75
+
+    (38) EXPR -> identifier larrow . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 94
+
+state 76
+
+    (36) EXPR -> identifier lparen . rparen
+    (37) EXPR -> identifier lparen . EXPRLISTCOMMA rparen
+    (41) EXPRLISTCOMMA -> . EXPRLISTCOMMA comma EXPR
+    (42) EXPRLISTCOMMA -> . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    rparen          shift and go to state 97
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 96
+    EXPRLISTCOMMA                  shift and go to state 95
+
+state 77
+
+    (8) FEATURELIT -> identifier lparen rparen colon type lbrace . EXPR rbrace
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 98
+
+state 78
+
+    (7) FEATURELIT -> identifier lparen FORMAL rparen colon type . lbrace EXPR rbrace
+
+    lbrace          shift and go to state 99
+
+
+state 79
+
+    (39) EXPR -> if EXPR then . EXPR else EXPR fi
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 100
+
+state 80
+
+    (53) EXPR -> EXPR le EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    lt              reduce using rule 53 (EXPR -> EXPR le EXPR .)
+    le              reduce using rule 53 (EXPR -> EXPR le EXPR .)
+    equals          reduce using rule 53 (EXPR -> EXPR le EXPR .)
+    rparen          reduce using rule 53 (EXPR -> EXPR le EXPR .)
+    comma           reduce using rule 53 (EXPR -> EXPR le EXPR .)
+    semi            reduce using rule 53 (EXPR -> EXPR le EXPR .)
+    then            reduce using rule 53 (EXPR -> EXPR le EXPR .)
+    of              reduce using rule 53 (EXPR -> EXPR le EXPR .)
+    loop            reduce using rule 53 (EXPR -> EXPR le EXPR .)
+    rbrace          reduce using rule 53 (EXPR -> EXPR le EXPR .)
+    else            reduce using rule 53 (EXPR -> EXPR le EXPR .)
+    pool            reduce using rule 53 (EXPR -> EXPR le EXPR .)
+    fi              reduce using rule 53 (EXPR -> EXPR le EXPR .)
+    in              reduce using rule 53 (EXPR -> EXPR le EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+
+  ! at              [ reduce using rule 53 (EXPR -> EXPR le EXPR .) ]
+  ! dot             [ reduce using rule 53 (EXPR -> EXPR le EXPR .) ]
+  ! plus            [ reduce using rule 53 (EXPR -> EXPR le EXPR .) ]
+  ! minus           [ reduce using rule 53 (EXPR -> EXPR le EXPR .) ]
+  ! times           [ reduce using rule 53 (EXPR -> EXPR le EXPR .) ]
+  ! divide          [ reduce using rule 53 (EXPR -> EXPR le EXPR .) ]
+  ! lt              [ shift and go to state 61 ]
+  ! le              [ shift and go to state 57 ]
+  ! equals          [ shift and go to state 59 ]
+
+
+state 81
+
+    (51) EXPR -> EXPR divide EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    plus            reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    minus           reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    times           reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    divide          reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    lt              reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    le              reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    equals          reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    rparen          reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    comma           reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    semi            reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    then            reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    of              reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    loop            reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    rbrace          reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    else            reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    pool            reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    fi              reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    in              reduce using rule 51 (EXPR -> EXPR divide EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+
+  ! at              [ reduce using rule 51 (EXPR -> EXPR divide EXPR .) ]
+  ! dot             [ reduce using rule 51 (EXPR -> EXPR divide EXPR .) ]
+  ! plus            [ shift and go to state 63 ]
+  ! minus           [ shift and go to state 64 ]
+  ! times           [ shift and go to state 60 ]
+  ! divide          [ shift and go to state 58 ]
+  ! lt              [ shift and go to state 61 ]
+  ! le              [ shift and go to state 57 ]
+  ! equals          [ shift and go to state 59 ]
+
+
+state 82
+
+    (54) EXPR -> EXPR equals EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    lt              reduce using rule 54 (EXPR -> EXPR equals EXPR .)
+    le              reduce using rule 54 (EXPR -> EXPR equals EXPR .)
+    equals          reduce using rule 54 (EXPR -> EXPR equals EXPR .)
+    rparen          reduce using rule 54 (EXPR -> EXPR equals EXPR .)
+    comma           reduce using rule 54 (EXPR -> EXPR equals EXPR .)
+    semi            reduce using rule 54 (EXPR -> EXPR equals EXPR .)
+    then            reduce using rule 54 (EXPR -> EXPR equals EXPR .)
+    of              reduce using rule 54 (EXPR -> EXPR equals EXPR .)
+    loop            reduce using rule 54 (EXPR -> EXPR equals EXPR .)
+    rbrace          reduce using rule 54 (EXPR -> EXPR equals EXPR .)
+    else            reduce using rule 54 (EXPR -> EXPR equals EXPR .)
+    pool            reduce using rule 54 (EXPR -> EXPR equals EXPR .)
+    fi              reduce using rule 54 (EXPR -> EXPR equals EXPR .)
+    in              reduce using rule 54 (EXPR -> EXPR equals EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+
+  ! at              [ reduce using rule 54 (EXPR -> EXPR equals EXPR .) ]
+  ! dot             [ reduce using rule 54 (EXPR -> EXPR equals EXPR .) ]
+  ! plus            [ reduce using rule 54 (EXPR -> EXPR equals EXPR .) ]
+  ! minus           [ reduce using rule 54 (EXPR -> EXPR equals EXPR .) ]
+  ! times           [ reduce using rule 54 (EXPR -> EXPR equals EXPR .) ]
+  ! divide          [ reduce using rule 54 (EXPR -> EXPR equals EXPR .) ]
+  ! lt              [ shift and go to state 61 ]
+  ! le              [ shift and go to state 57 ]
+  ! equals          [ shift and go to state 59 ]
+
+
+state 83
+
+    (50) EXPR -> EXPR times EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    plus            reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    minus           reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    times           reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    divide          reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    lt              reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    le              reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    equals          reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    rparen          reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    comma           reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    semi            reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    then            reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    of              reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    loop            reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    rbrace          reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    else            reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    pool            reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    fi              reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    in              reduce using rule 50 (EXPR -> EXPR times EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+
+  ! at              [ reduce using rule 50 (EXPR -> EXPR times EXPR .) ]
+  ! dot             [ reduce using rule 50 (EXPR -> EXPR times EXPR .) ]
+  ! plus            [ shift and go to state 63 ]
+  ! minus           [ shift and go to state 64 ]
+  ! times           [ shift and go to state 60 ]
+  ! divide          [ shift and go to state 58 ]
+  ! lt              [ shift and go to state 61 ]
+  ! le              [ shift and go to state 57 ]
+  ! equals          [ shift and go to state 59 ]
+
+
+state 84
+
+    (52) EXPR -> EXPR lt EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    lt              reduce using rule 52 (EXPR -> EXPR lt EXPR .)
+    le              reduce using rule 52 (EXPR -> EXPR lt EXPR .)
+    equals          reduce using rule 52 (EXPR -> EXPR lt EXPR .)
+    rparen          reduce using rule 52 (EXPR -> EXPR lt EXPR .)
+    comma           reduce using rule 52 (EXPR -> EXPR lt EXPR .)
+    semi            reduce using rule 52 (EXPR -> EXPR lt EXPR .)
+    then            reduce using rule 52 (EXPR -> EXPR lt EXPR .)
+    of              reduce using rule 52 (EXPR -> EXPR lt EXPR .)
+    loop            reduce using rule 52 (EXPR -> EXPR lt EXPR .)
+    rbrace          reduce using rule 52 (EXPR -> EXPR lt EXPR .)
+    else            reduce using rule 52 (EXPR -> EXPR lt EXPR .)
+    pool            reduce using rule 52 (EXPR -> EXPR lt EXPR .)
+    fi              reduce using rule 52 (EXPR -> EXPR lt EXPR .)
+    in              reduce using rule 52 (EXPR -> EXPR lt EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+
+  ! at              [ reduce using rule 52 (EXPR -> EXPR lt EXPR .) ]
+  ! dot             [ reduce using rule 52 (EXPR -> EXPR lt EXPR .) ]
+  ! plus            [ reduce using rule 52 (EXPR -> EXPR lt EXPR .) ]
+  ! minus           [ reduce using rule 52 (EXPR -> EXPR lt EXPR .) ]
+  ! times           [ reduce using rule 52 (EXPR -> EXPR lt EXPR .) ]
+  ! divide          [ reduce using rule 52 (EXPR -> EXPR lt EXPR .) ]
+  ! lt              [ shift and go to state 61 ]
+  ! le              [ shift and go to state 57 ]
+  ! equals          [ shift and go to state 59 ]
+
+
+state 85
+
+    (22) EXPR -> EXPR at type . dot identifier lparen rparen
+    (24) EXPR -> EXPR at type . dot identifier lparen EXPRLISTCOMMA rparen
+
+    dot             shift and go to state 101
+
+
+state 86
+
+    (48) EXPR -> EXPR plus EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    plus            reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    minus           reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    lt              reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    le              reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    equals          reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    rparen          reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    comma           reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    semi            reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    then            reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    of              reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    loop            reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    rbrace          reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    else            reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    pool            reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    fi              reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    in              reduce using rule 48 (EXPR -> EXPR plus EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    times           shift and go to state 60
+    divide          shift and go to state 58
+
+  ! at              [ reduce using rule 48 (EXPR -> EXPR plus EXPR .) ]
+  ! dot             [ reduce using rule 48 (EXPR -> EXPR plus EXPR .) ]
+  ! times           [ reduce using rule 48 (EXPR -> EXPR plus EXPR .) ]
+  ! divide          [ reduce using rule 48 (EXPR -> EXPR plus EXPR .) ]
+  ! plus            [ shift and go to state 63 ]
+  ! minus           [ shift and go to state 64 ]
+  ! lt              [ shift and go to state 61 ]
+  ! le              [ shift and go to state 57 ]
+  ! equals          [ shift and go to state 59 ]
+
+
+state 87
+
+    (49) EXPR -> EXPR minus EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    plus            reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    minus           reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    lt              reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    le              reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    equals          reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    rparen          reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    comma           reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    semi            reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    then            reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    of              reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    loop            reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    rbrace          reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    else            reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    pool            reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    fi              reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    in              reduce using rule 49 (EXPR -> EXPR minus EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    times           shift and go to state 60
+    divide          shift and go to state 58
+
+  ! at              [ reduce using rule 49 (EXPR -> EXPR minus EXPR .) ]
+  ! dot             [ reduce using rule 49 (EXPR -> EXPR minus EXPR .) ]
+  ! times           [ reduce using rule 49 (EXPR -> EXPR minus EXPR .) ]
+  ! divide          [ reduce using rule 49 (EXPR -> EXPR minus EXPR .) ]
+  ! plus            [ shift and go to state 63 ]
+  ! minus           [ shift and go to state 64 ]
+  ! lt              [ shift and go to state 61 ]
+  ! le              [ shift and go to state 57 ]
+  ! equals          [ shift and go to state 59 ]
+
+
+state 88
+
+    (23) EXPR -> EXPR dot identifier . lparen rparen
+    (25) EXPR -> EXPR dot identifier . lparen EXPRLISTCOMMA rparen
+
+    lparen          shift and go to state 102
+
+
+state 89
+
+    (26) EXPR -> let identifier colon . type LETHELPER in EXPR
+    (27) EXPR -> let identifier colon . type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> let identifier colon . type in EXPR
+    (29) EXPR -> let identifier colon . type larrow EXPR in EXPR
+
+    type            shift and go to state 103
+
+
+state 90
+
+    (34) EXPR -> lparen EXPR rparen .
+
+    at              reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    dot             reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    plus            reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    minus           reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    times           reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    divide          reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    lt              reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    le              reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    equals          reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    rparen          reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    comma           reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    semi            reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    then            reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    of              reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    loop            reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    rbrace          reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    else            reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    pool            reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    fi              reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+    in              reduce using rule 34 (EXPR -> lparen EXPR rparen .)
+
+
+state 91
+
+    (18) EXPR -> case EXPR of . CASEHELPER esac
+    (19) CASEHELPER -> . CASEHELPER CASELIT
+    (20) CASEHELPER -> . CASELIT
+    (21) CASELIT -> . identifier colon type rarrow EXPR semi
+
+    identifier      shift and go to state 106
+
+    CASELIT                        shift and go to state 104
+    CASEHELPER                     shift and go to state 105
+
+state 92
+
+    (35) EXPR -> lbrace EXPRLISTSEMI semi . rbrace
+    (43) EXPRLISTSEMI -> EXPRLISTSEMI semi . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    rbrace          shift and go to state 107
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 108
+
+state 93
+
+    (40) EXPR -> while EXPR loop . EXPR pool
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 109
+
+state 94
+
+    (38) EXPR -> identifier larrow EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    rparen          reduce using rule 38 (EXPR -> identifier larrow EXPR .)
+    comma           reduce using rule 38 (EXPR -> identifier larrow EXPR .)
+    semi            reduce using rule 38 (EXPR -> identifier larrow EXPR .)
+    then            reduce using rule 38 (EXPR -> identifier larrow EXPR .)
+    of              reduce using rule 38 (EXPR -> identifier larrow EXPR .)
+    loop            reduce using rule 38 (EXPR -> identifier larrow EXPR .)
+    rbrace          reduce using rule 38 (EXPR -> identifier larrow EXPR .)
+    else            reduce using rule 38 (EXPR -> identifier larrow EXPR .)
+    pool            reduce using rule 38 (EXPR -> identifier larrow EXPR .)
+    fi              reduce using rule 38 (EXPR -> identifier larrow EXPR .)
+    in              reduce using rule 38 (EXPR -> identifier larrow EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+  ! at              [ reduce using rule 38 (EXPR -> identifier larrow EXPR .) ]
+  ! dot             [ reduce using rule 38 (EXPR -> identifier larrow EXPR .) ]
+  ! plus            [ reduce using rule 38 (EXPR -> identifier larrow EXPR .) ]
+  ! minus           [ reduce using rule 38 (EXPR -> identifier larrow EXPR .) ]
+  ! times           [ reduce using rule 38 (EXPR -> identifier larrow EXPR .) ]
+  ! divide          [ reduce using rule 38 (EXPR -> identifier larrow EXPR .) ]
+  ! lt              [ reduce using rule 38 (EXPR -> identifier larrow EXPR .) ]
+  ! le              [ reduce using rule 38 (EXPR -> identifier larrow EXPR .) ]
+  ! equals          [ reduce using rule 38 (EXPR -> identifier larrow EXPR .) ]
+
+
+state 95
+
+    (37) EXPR -> identifier lparen EXPRLISTCOMMA . rparen
+    (41) EXPRLISTCOMMA -> EXPRLISTCOMMA . comma EXPR
+
+    rparen          shift and go to state 110
+    comma           shift and go to state 111
+
+
+state 96
+
+    (42) EXPRLISTCOMMA -> EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    rparen          reduce using rule 42 (EXPRLISTCOMMA -> EXPR .)
+    comma           reduce using rule 42 (EXPRLISTCOMMA -> EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+
+state 97
+
+    (36) EXPR -> identifier lparen rparen .
+
+    at              reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    dot             reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    plus            reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    minus           reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    times           reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    divide          reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    lt              reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    le              reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    equals          reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    rparen          reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    comma           reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    semi            reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    then            reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    of              reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    loop            reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    rbrace          reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    else            reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    pool            reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    fi              reduce using rule 36 (EXPR -> identifier lparen rparen .)
+    in              reduce using rule 36 (EXPR -> identifier lparen rparen .)
+
+
+state 98
+
+    (8) FEATURELIT -> identifier lparen rparen colon type lbrace EXPR . rbrace
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    rbrace          shift and go to state 112
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+
+state 99
+
+    (7) FEATURELIT -> identifier lparen FORMAL rparen colon type lbrace . EXPR rbrace
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 113
+
+state 100
+
+    (39) EXPR -> if EXPR then EXPR . else EXPR fi
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    else            shift and go to state 114
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+
+state 101
+
+    (22) EXPR -> EXPR at type dot . identifier lparen rparen
+    (24) EXPR -> EXPR at type dot . identifier lparen EXPRLISTCOMMA rparen
+
+    identifier      shift and go to state 115
+
+
+state 102
+
+    (23) EXPR -> EXPR dot identifier lparen . rparen
+    (25) EXPR -> EXPR dot identifier lparen . EXPRLISTCOMMA rparen
+    (41) EXPRLISTCOMMA -> . EXPRLISTCOMMA comma EXPR
+    (42) EXPRLISTCOMMA -> . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    rparen          shift and go to state 117
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 96
+    EXPRLISTCOMMA                  shift and go to state 116
+
+state 103
+
+    (26) EXPR -> let identifier colon type . LETHELPER in EXPR
+    (27) EXPR -> let identifier colon type . larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> let identifier colon type . in EXPR
+    (29) EXPR -> let identifier colon type . larrow EXPR in EXPR
+    (30) LETHELPER -> . comma LETHELPERLIT LETHELPER
+    (31) LETHELPER -> . comma LETHELPERLIT
+
+    larrow          shift and go to state 119
+    in              shift and go to state 121
+    comma           shift and go to state 118
+
+    LETHELPER                      shift and go to state 120
+
+state 104
+
+    (20) CASEHELPER -> CASELIT .
+
+    esac            reduce using rule 20 (CASEHELPER -> CASELIT .)
+    identifier      reduce using rule 20 (CASEHELPER -> CASELIT .)
+
+
+state 105
+
+    (18) EXPR -> case EXPR of CASEHELPER . esac
+    (19) CASEHELPER -> CASEHELPER . CASELIT
+    (21) CASELIT -> . identifier colon type rarrow EXPR semi
+
+    esac            shift and go to state 123
+    identifier      shift and go to state 106
+
+    CASELIT                        shift and go to state 122
+
+state 106
+
+    (21) CASELIT -> identifier . colon type rarrow EXPR semi
+
+    colon           shift and go to state 124
+
+
+state 107
+
+    (35) EXPR -> lbrace EXPRLISTSEMI semi rbrace .
+
+    at              reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    dot             reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    plus            reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    minus           reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    times           reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    divide          reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    lt              reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    le              reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    equals          reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    rparen          reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    comma           reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    semi            reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    then            reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    of              reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    loop            reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    rbrace          reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    else            reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    pool            reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    fi              reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+    in              reduce using rule 35 (EXPR -> lbrace EXPRLISTSEMI semi rbrace .)
+
+
+state 108
+
+    (43) EXPRLISTSEMI -> EXPRLISTSEMI semi EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    semi            reduce using rule 43 (EXPRLISTSEMI -> EXPRLISTSEMI semi EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+
+state 109
+
+    (40) EXPR -> while EXPR loop EXPR . pool
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    pool            shift and go to state 125
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+
+state 110
+
+    (37) EXPR -> identifier lparen EXPRLISTCOMMA rparen .
+
+    at              reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    dot             reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    plus            reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    minus           reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    times           reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    divide          reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    lt              reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    le              reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    equals          reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    rparen          reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    comma           reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    semi            reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    then            reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    of              reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    loop            reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    rbrace          reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    else            reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    pool            reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    fi              reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+    in              reduce using rule 37 (EXPR -> identifier lparen EXPRLISTCOMMA rparen .)
+
+
+state 111
+
+    (41) EXPRLISTCOMMA -> EXPRLISTCOMMA comma . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 126
+
+state 112
+
+    (8) FEATURELIT -> identifier lparen rparen colon type lbrace EXPR rbrace .
+
+    semi            reduce using rule 8 (FEATURELIT -> identifier lparen rparen colon type lbrace EXPR rbrace .)
+
+
+state 113
+
+    (7) FEATURELIT -> identifier lparen FORMAL rparen colon type lbrace EXPR . rbrace
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    rbrace          shift and go to state 127
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+
+state 114
+
+    (39) EXPR -> if EXPR then EXPR else . EXPR fi
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 128
+
+state 115
+
+    (22) EXPR -> EXPR at type dot identifier . lparen rparen
+    (24) EXPR -> EXPR at type dot identifier . lparen EXPRLISTCOMMA rparen
+
+    lparen          shift and go to state 129
+
+
+state 116
+
+    (25) EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA . rparen
+    (41) EXPRLISTCOMMA -> EXPRLISTCOMMA . comma EXPR
+
+    rparen          shift and go to state 130
+    comma           shift and go to state 111
+
+
+state 117
+
+    (23) EXPR -> EXPR dot identifier lparen rparen .
+
+    at              reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    dot             reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    plus            reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    minus           reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    times           reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    divide          reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    lt              reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    le              reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    equals          reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    rparen          reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    comma           reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    semi            reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    then            reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    of              reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    loop            reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    rbrace          reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    else            reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    pool            reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    fi              reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+    in              reduce using rule 23 (EXPR -> EXPR dot identifier lparen rparen .)
+
+
+state 118
+
+    (30) LETHELPER -> comma . LETHELPERLIT LETHELPER
+    (31) LETHELPER -> comma . LETHELPERLIT
+    (32) LETHELPERLIT -> . identifier colon type
+    (33) LETHELPERLIT -> . identifier colon type larrow EXPR
+
+    identifier      shift and go to state 132
+
+    LETHELPERLIT                   shift and go to state 131
+
+state 119
+
+    (27) EXPR -> let identifier colon type larrow . EXPR LETHELPER in EXPR
+    (29) EXPR -> let identifier colon type larrow . EXPR in EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 133
+
+state 120
+
+    (26) EXPR -> let identifier colon type LETHELPER . in EXPR
+
+    in              shift and go to state 134
+
+
+state 121
+
+    (28) EXPR -> let identifier colon type in . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 135
+
+state 122
+
+    (19) CASEHELPER -> CASEHELPER CASELIT .
+
+    esac            reduce using rule 19 (CASEHELPER -> CASEHELPER CASELIT .)
+    identifier      reduce using rule 19 (CASEHELPER -> CASEHELPER CASELIT .)
+
+
+state 123
+
+    (18) EXPR -> case EXPR of CASEHELPER esac .
+
+    at              reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    dot             reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    plus            reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    minus           reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    times           reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    divide          reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    lt              reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    le              reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    equals          reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    rparen          reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    comma           reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    semi            reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    then            reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    of              reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    loop            reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    rbrace          reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    else            reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    pool            reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    fi              reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+    in              reduce using rule 18 (EXPR -> case EXPR of CASEHELPER esac .)
+
+
+state 124
+
+    (21) CASELIT -> identifier colon . type rarrow EXPR semi
+
+    type            shift and go to state 136
+
+
+state 125
+
+    (40) EXPR -> while EXPR loop EXPR pool .
+
+    at              reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    dot             reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    plus            reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    minus           reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    times           reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    divide          reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    lt              reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    le              reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    equals          reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    rparen          reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    comma           reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    semi            reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    then            reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    of              reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    loop            reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    rbrace          reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    else            reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    pool            reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    fi              reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+    in              reduce using rule 40 (EXPR -> while EXPR loop EXPR pool .)
+
+
+state 126
+
+    (41) EXPRLISTCOMMA -> EXPRLISTCOMMA comma EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    rparen          reduce using rule 41 (EXPRLISTCOMMA -> EXPRLISTCOMMA comma EXPR .)
+    comma           reduce using rule 41 (EXPRLISTCOMMA -> EXPRLISTCOMMA comma EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+
+state 127
+
+    (7) FEATURELIT -> identifier lparen FORMAL rparen colon type lbrace EXPR rbrace .
+
+    semi            reduce using rule 7 (FEATURELIT -> identifier lparen FORMAL rparen colon type lbrace EXPR rbrace .)
+
+
+state 128
+
+    (39) EXPR -> if EXPR then EXPR else EXPR . fi
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    fi              shift and go to state 137
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+
+state 129
+
+    (22) EXPR -> EXPR at type dot identifier lparen . rparen
+    (24) EXPR -> EXPR at type dot identifier lparen . EXPRLISTCOMMA rparen
+    (41) EXPRLISTCOMMA -> . EXPRLISTCOMMA comma EXPR
+    (42) EXPRLISTCOMMA -> . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    rparen          shift and go to state 139
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 96
+    EXPRLISTCOMMA                  shift and go to state 138
+
+state 130
+
+    (25) EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .
+
+    at              reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    dot             reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    plus            reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    minus           reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    times           reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    divide          reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    lt              reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    le              reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    equals          reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    rparen          reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    comma           reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    semi            reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    then            reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    of              reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    loop            reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    rbrace          reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    else            reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    pool            reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    fi              reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+    in              reduce using rule 25 (EXPR -> EXPR dot identifier lparen EXPRLISTCOMMA rparen .)
+
+
+state 131
+
+    (30) LETHELPER -> comma LETHELPERLIT . LETHELPER
+    (31) LETHELPER -> comma LETHELPERLIT .
+    (30) LETHELPER -> . comma LETHELPERLIT LETHELPER
+    (31) LETHELPER -> . comma LETHELPERLIT
+
+    in              reduce using rule 31 (LETHELPER -> comma LETHELPERLIT .)
+    comma           shift and go to state 118
+
+    LETHELPER                      shift and go to state 140
+
+state 132
+
+    (32) LETHELPERLIT -> identifier . colon type
+    (33) LETHELPERLIT -> identifier . colon type larrow EXPR
+
+    colon           shift and go to state 141
+
+
+state 133
+
+    (27) EXPR -> let identifier colon type larrow EXPR . LETHELPER in EXPR
+    (29) EXPR -> let identifier colon type larrow EXPR . in EXPR
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+    (30) LETHELPER -> . comma LETHELPERLIT LETHELPER
+    (31) LETHELPER -> . comma LETHELPERLIT
+
+    in              shift and go to state 143
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+    comma           shift and go to state 118
+
+    LETHELPER                      shift and go to state 142
+
+state 134
+
+    (26) EXPR -> let identifier colon type LETHELPER in . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 144
+
+state 135
+
+    (28) EXPR -> let identifier colon type in EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+  ! shift/reduce conflict for at resolved as shift
+  ! shift/reduce conflict for dot resolved as shift
   ! shift/reduce conflict for plus resolved as shift
-    $end            reduce using rule 1 (expression -> expression plus expression .)
-    plus            shift and go to state 3
+  ! shift/reduce conflict for minus resolved as shift
+  ! shift/reduce conflict for times resolved as shift
+  ! shift/reduce conflict for divide resolved as shift
+  ! shift/reduce conflict for lt resolved as shift
+  ! shift/reduce conflict for le resolved as shift
+  ! shift/reduce conflict for equals resolved as shift
+    rparen          reduce using rule 28 (EXPR -> let identifier colon type in EXPR .)
+    comma           reduce using rule 28 (EXPR -> let identifier colon type in EXPR .)
+    semi            reduce using rule 28 (EXPR -> let identifier colon type in EXPR .)
+    then            reduce using rule 28 (EXPR -> let identifier colon type in EXPR .)
+    of              reduce using rule 28 (EXPR -> let identifier colon type in EXPR .)
+    loop            reduce using rule 28 (EXPR -> let identifier colon type in EXPR .)
+    rbrace          reduce using rule 28 (EXPR -> let identifier colon type in EXPR .)
+    else            reduce using rule 28 (EXPR -> let identifier colon type in EXPR .)
+    pool            reduce using rule 28 (EXPR -> let identifier colon type in EXPR .)
+    fi              reduce using rule 28 (EXPR -> let identifier colon type in EXPR .)
+    in              reduce using rule 28 (EXPR -> let identifier colon type in EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
 
-  ! plus            [ reduce using rule 1 (expression -> expression plus expression .) ]
+  ! at              [ reduce using rule 28 (EXPR -> let identifier colon type in EXPR .) ]
+  ! dot             [ reduce using rule 28 (EXPR -> let identifier colon type in EXPR .) ]
+  ! plus            [ reduce using rule 28 (EXPR -> let identifier colon type in EXPR .) ]
+  ! minus           [ reduce using rule 28 (EXPR -> let identifier colon type in EXPR .) ]
+  ! times           [ reduce using rule 28 (EXPR -> let identifier colon type in EXPR .) ]
+  ! divide          [ reduce using rule 28 (EXPR -> let identifier colon type in EXPR .) ]
+  ! lt              [ reduce using rule 28 (EXPR -> let identifier colon type in EXPR .) ]
+  ! le              [ reduce using rule 28 (EXPR -> let identifier colon type in EXPR .) ]
+  ! equals          [ reduce using rule 28 (EXPR -> let identifier colon type in EXPR .) ]
+
+
+state 136
+
+    (21) CASELIT -> identifier colon type . rarrow EXPR semi
+
+    rarrow          shift and go to state 145
+
+
+state 137
+
+    (39) EXPR -> if EXPR then EXPR else EXPR fi .
+
+    at              reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    dot             reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    plus            reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    minus           reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    times           reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    divide          reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    lt              reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    le              reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    equals          reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    rparen          reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    comma           reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    semi            reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    then            reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    of              reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    loop            reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    rbrace          reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    else            reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    pool            reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    fi              reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+    in              reduce using rule 39 (EXPR -> if EXPR then EXPR else EXPR fi .)
+
+
+state 138
+
+    (24) EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA . rparen
+    (41) EXPRLISTCOMMA -> EXPRLISTCOMMA . comma EXPR
+
+    rparen          shift and go to state 146
+    comma           shift and go to state 111
+
+
+state 139
+
+    (22) EXPR -> EXPR at type dot identifier lparen rparen .
+
+    at              reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    dot             reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    plus            reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    minus           reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    times           reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    divide          reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    lt              reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    le              reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    equals          reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    rparen          reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    comma           reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    semi            reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    then            reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    of              reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    loop            reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    rbrace          reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    else            reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    pool            reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    fi              reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+    in              reduce using rule 22 (EXPR -> EXPR at type dot identifier lparen rparen .)
+
+
+state 140
+
+    (30) LETHELPER -> comma LETHELPERLIT LETHELPER .
+
+    in              reduce using rule 30 (LETHELPER -> comma LETHELPERLIT LETHELPER .)
+
+
+state 141
+
+    (32) LETHELPERLIT -> identifier colon . type
+    (33) LETHELPERLIT -> identifier colon . type larrow EXPR
+
+    type            shift and go to state 147
+
+
+state 142
+
+    (27) EXPR -> let identifier colon type larrow EXPR LETHELPER . in EXPR
+
+    in              shift and go to state 148
+
+
+state 143
+
+    (29) EXPR -> let identifier colon type larrow EXPR in . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 149
+
+state 144
+
+    (26) EXPR -> let identifier colon type LETHELPER in EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+  ! shift/reduce conflict for at resolved as shift
+  ! shift/reduce conflict for dot resolved as shift
+  ! shift/reduce conflict for plus resolved as shift
+  ! shift/reduce conflict for minus resolved as shift
+  ! shift/reduce conflict for times resolved as shift
+  ! shift/reduce conflict for divide resolved as shift
+  ! shift/reduce conflict for lt resolved as shift
+  ! shift/reduce conflict for le resolved as shift
+  ! shift/reduce conflict for equals resolved as shift
+    rparen          reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .)
+    comma           reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .)
+    semi            reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .)
+    then            reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .)
+    of              reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .)
+    loop            reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .)
+    rbrace          reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .)
+    else            reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .)
+    pool            reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .)
+    fi              reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .)
+    in              reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+  ! at              [ reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .) ]
+  ! dot             [ reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .) ]
+  ! plus            [ reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .) ]
+  ! minus           [ reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .) ]
+  ! times           [ reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .) ]
+  ! divide          [ reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .) ]
+  ! lt              [ reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .) ]
+  ! le              [ reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .) ]
+  ! equals          [ reduce using rule 26 (EXPR -> let identifier colon type LETHELPER in EXPR .) ]
+
+
+state 145
+
+    (21) CASELIT -> identifier colon type rarrow . EXPR semi
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 150
+
+state 146
+
+    (24) EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .
+
+    at              reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    dot             reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    plus            reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    minus           reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    times           reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    divide          reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    lt              reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    le              reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    equals          reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    rparen          reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    comma           reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    semi            reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    then            reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    of              reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    loop            reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    rbrace          reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    else            reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    pool            reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    fi              reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+    in              reduce using rule 24 (EXPR -> EXPR at type dot identifier lparen EXPRLISTCOMMA rparen .)
+
+
+state 147
+
+    (32) LETHELPERLIT -> identifier colon type .
+    (33) LETHELPERLIT -> identifier colon type . larrow EXPR
+
+    comma           reduce using rule 32 (LETHELPERLIT -> identifier colon type .)
+    in              reduce using rule 32 (LETHELPERLIT -> identifier colon type .)
+    larrow          shift and go to state 151
+
+
+state 148
+
+    (27) EXPR -> let identifier colon type larrow EXPR LETHELPER in . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 152
+
+state 149
+
+    (29) EXPR -> let identifier colon type larrow EXPR in EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+  ! shift/reduce conflict for at resolved as shift
+  ! shift/reduce conflict for dot resolved as shift
+  ! shift/reduce conflict for plus resolved as shift
+  ! shift/reduce conflict for minus resolved as shift
+  ! shift/reduce conflict for times resolved as shift
+  ! shift/reduce conflict for divide resolved as shift
+  ! shift/reduce conflict for lt resolved as shift
+  ! shift/reduce conflict for le resolved as shift
+  ! shift/reduce conflict for equals resolved as shift
+    rparen          reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .)
+    comma           reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .)
+    semi            reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .)
+    then            reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .)
+    of              reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .)
+    loop            reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .)
+    rbrace          reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .)
+    else            reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .)
+    pool            reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .)
+    fi              reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .)
+    in              reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+  ! at              [ reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .) ]
+  ! dot             [ reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .) ]
+  ! plus            [ reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .) ]
+  ! minus           [ reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .) ]
+  ! times           [ reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .) ]
+  ! divide          [ reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .) ]
+  ! lt              [ reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .) ]
+  ! le              [ reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .) ]
+  ! equals          [ reduce using rule 29 (EXPR -> let identifier colon type larrow EXPR in EXPR .) ]
+
+
+state 150
+
+    (21) CASELIT -> identifier colon type rarrow EXPR . semi
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    semi            shift and go to state 153
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+
+state 151
+
+    (33) LETHELPERLIT -> identifier colon type larrow . EXPR
+    (18) EXPR -> . case EXPR of CASEHELPER esac
+    (22) EXPR -> . EXPR at type dot identifier lparen rparen
+    (23) EXPR -> . EXPR dot identifier lparen rparen
+    (24) EXPR -> . EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> . EXPR dot identifier lparen EXPRLISTCOMMA rparen
+    (26) EXPR -> . let identifier colon type LETHELPER in EXPR
+    (27) EXPR -> . let identifier colon type larrow EXPR LETHELPER in EXPR
+    (28) EXPR -> . let identifier colon type in EXPR
+    (29) EXPR -> . let identifier colon type larrow EXPR in EXPR
+    (34) EXPR -> . lparen EXPR rparen
+    (35) EXPR -> . lbrace EXPRLISTSEMI semi rbrace
+    (36) EXPR -> . identifier lparen rparen
+    (37) EXPR -> . identifier lparen EXPRLISTCOMMA rparen
+    (38) EXPR -> . identifier larrow EXPR
+    (39) EXPR -> . if EXPR then EXPR else EXPR fi
+    (40) EXPR -> . while EXPR loop EXPR pool
+    (45) EXPR -> . isvoid EXPR
+    (46) EXPR -> . tilde EXPR
+    (47) EXPR -> . not EXPR
+    (48) EXPR -> . EXPR plus EXPR
+    (49) EXPR -> . EXPR minus EXPR
+    (50) EXPR -> . EXPR times EXPR
+    (51) EXPR -> . EXPR divide EXPR
+    (52) EXPR -> . EXPR lt EXPR
+    (53) EXPR -> . EXPR le EXPR
+    (54) EXPR -> . EXPR equals EXPR
+    (55) EXPR -> . identifier
+    (56) EXPR -> . integer
+    (57) EXPR -> . string
+    (58) EXPR -> . true
+    (59) EXPR -> . false
+    (60) EXPR -> . new type
+
+    case            shift and go to state 47
+    let             shift and go to state 42
+    lparen          shift and go to state 43
+    lbrace          shift and go to state 48
+    identifier      shift and go to state 50
+    if              shift and go to state 37
+    while           shift and go to state 49
+    isvoid          shift and go to state 40
+    tilde           shift and go to state 36
+    not             shift and go to state 45
+    integer         shift and go to state 38
+    string          shift and go to state 41
+    true            shift and go to state 46
+    false           shift and go to state 35
+    new             shift and go to state 44
+
+    EXPR                           shift and go to state 154
+
+state 152
+
+    (27) EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+  ! shift/reduce conflict for at resolved as shift
+  ! shift/reduce conflict for dot resolved as shift
+  ! shift/reduce conflict for plus resolved as shift
+  ! shift/reduce conflict for minus resolved as shift
+  ! shift/reduce conflict for times resolved as shift
+  ! shift/reduce conflict for divide resolved as shift
+  ! shift/reduce conflict for lt resolved as shift
+  ! shift/reduce conflict for le resolved as shift
+  ! shift/reduce conflict for equals resolved as shift
+    rparen          reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .)
+    comma           reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .)
+    semi            reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .)
+    then            reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .)
+    of              reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .)
+    loop            reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .)
+    rbrace          reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .)
+    else            reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .)
+    pool            reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .)
+    fi              reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .)
+    in              reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
+
+  ! at              [ reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .) ]
+  ! dot             [ reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .) ]
+  ! plus            [ reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .) ]
+  ! minus           [ reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .) ]
+  ! times           [ reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .) ]
+  ! divide          [ reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .) ]
+  ! lt              [ reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .) ]
+  ! le              [ reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .) ]
+  ! equals          [ reduce using rule 27 (EXPR -> let identifier colon type larrow EXPR LETHELPER in EXPR .) ]
+
+
+state 153
+
+    (21) CASELIT -> identifier colon type rarrow EXPR semi .
+
+    esac            reduce using rule 21 (CASELIT -> identifier colon type rarrow EXPR semi .)
+    identifier      reduce using rule 21 (CASELIT -> identifier colon type rarrow EXPR semi .)
+
+
+state 154
+
+    (33) LETHELPERLIT -> identifier colon type larrow EXPR .
+    (22) EXPR -> EXPR . at type dot identifier lparen rparen
+    (23) EXPR -> EXPR . dot identifier lparen rparen
+    (24) EXPR -> EXPR . at type dot identifier lparen EXPRLISTCOMMA rparen
+    (25) EXPR -> EXPR . dot identifier lparen EXPRLISTCOMMA rparen
+    (48) EXPR -> EXPR . plus EXPR
+    (49) EXPR -> EXPR . minus EXPR
+    (50) EXPR -> EXPR . times EXPR
+    (51) EXPR -> EXPR . divide EXPR
+    (52) EXPR -> EXPR . lt EXPR
+    (53) EXPR -> EXPR . le EXPR
+    (54) EXPR -> EXPR . equals EXPR
+
+    comma           reduce using rule 33 (LETHELPERLIT -> identifier colon type larrow EXPR .)
+    in              reduce using rule 33 (LETHELPERLIT -> identifier colon type larrow EXPR .)
+    at              shift and go to state 62
+    dot             shift and go to state 65
+    plus            shift and go to state 63
+    minus           shift and go to state 64
+    times           shift and go to state 60
+    divide          shift and go to state 58
+    lt              shift and go to state 61
+    le              shift and go to state 57
+    equals          shift and go to state 59
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for plus in state 4 resolved as shift
+WARNING: shift/reduce conflict for at in state 135 resolved as shift
+WARNING: shift/reduce conflict for dot in state 135 resolved as shift
+WARNING: shift/reduce conflict for plus in state 135 resolved as shift
+WARNING: shift/reduce conflict for minus in state 135 resolved as shift
+WARNING: shift/reduce conflict for times in state 135 resolved as shift
+WARNING: shift/reduce conflict for divide in state 135 resolved as shift
+WARNING: shift/reduce conflict for lt in state 135 resolved as shift
+WARNING: shift/reduce conflict for le in state 135 resolved as shift
+WARNING: shift/reduce conflict for equals in state 135 resolved as shift
+WARNING: shift/reduce conflict for at in state 144 resolved as shift
+WARNING: shift/reduce conflict for dot in state 144 resolved as shift
+WARNING: shift/reduce conflict for plus in state 144 resolved as shift
+WARNING: shift/reduce conflict for minus in state 144 resolved as shift
+WARNING: shift/reduce conflict for times in state 144 resolved as shift
+WARNING: shift/reduce conflict for divide in state 144 resolved as shift
+WARNING: shift/reduce conflict for lt in state 144 resolved as shift
+WARNING: shift/reduce conflict for le in state 144 resolved as shift
+WARNING: shift/reduce conflict for equals in state 144 resolved as shift
+WARNING: shift/reduce conflict for at in state 149 resolved as shift
+WARNING: shift/reduce conflict for dot in state 149 resolved as shift
+WARNING: shift/reduce conflict for plus in state 149 resolved as shift
+WARNING: shift/reduce conflict for minus in state 149 resolved as shift
+WARNING: shift/reduce conflict for times in state 149 resolved as shift
+WARNING: shift/reduce conflict for divide in state 149 resolved as shift
+WARNING: shift/reduce conflict for lt in state 149 resolved as shift
+WARNING: shift/reduce conflict for le in state 149 resolved as shift
+WARNING: shift/reduce conflict for equals in state 149 resolved as shift
+WARNING: shift/reduce conflict for at in state 152 resolved as shift
+WARNING: shift/reduce conflict for dot in state 152 resolved as shift
+WARNING: shift/reduce conflict for plus in state 152 resolved as shift
+WARNING: shift/reduce conflict for minus in state 152 resolved as shift
+WARNING: shift/reduce conflict for times in state 152 resolved as shift
+WARNING: shift/reduce conflict for divide in state 152 resolved as shift
+WARNING: shift/reduce conflict for lt in state 152 resolved as shift
+WARNING: shift/reduce conflict for le in state 152 resolved as shift
+WARNING: shift/reduce conflict for equals in state 152 resolved as shift

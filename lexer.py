@@ -35,6 +35,11 @@ class Lexer:
 
 	def add_token(self, token_type, line_no, value=None):
 		if token_type in self.token_types:
+			# t = lex.LexToken()
+			# t.type = token_type
+			# t.value = value
+			# t.lineno = int(line_no)
+			# t.lexpos = 0
 			t = Token(token_type, line_no, value)
 		else:
 			print 'Invalid Token Type'
