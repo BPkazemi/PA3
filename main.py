@@ -361,14 +361,14 @@ def p_expr_terminal(p):
 	p[0] = Node("terminal", [], p[1])
 	
 
-def recurce_tree(tree):
-	print "Body: {}".format(tree)
-	for elem in tree.children:
-		print " --- ", elem
+def recurce_tree(tree, depth):
+	print "--"*depth, "Body: {}".format(tree)
+	# for elem in tree.children:
+	# 	print "    "*depth, elem
 	if not len(tree.children):
 		return
 	for child in tree.children:
-		recurce_tree(child)
+		recurce_tree(child, depth+1)
 
 # def p_expression_plus(p):
 #     'expression : expression plus expression'
@@ -453,6 +453,6 @@ if __name__ == '__main__':
 			# 	break
 			# if not s: continue
 			result = parser.parse(lexer = lexer)
-			recurce_tree(result)
+			recurce_tree(result, 0)
 			break
 			# print result
