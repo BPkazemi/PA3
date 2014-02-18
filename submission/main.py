@@ -51,6 +51,11 @@ class Lexer:
 
 	def add_token(self, token_type, line_no, value=None):
 		if token_type in self.token_types:
+			# t = lex.LexToken()
+			# t.type = token_type
+			# t.value = value
+			# t.lineno = int(line_no)
+			# t.lexpos = 0
 			t = Token(token_type, line_no, value)
 		else:
 			print 'Invalid Token Type'
@@ -325,6 +330,11 @@ def p_expr_conditionals(p):
 		# p[0] = p[2] + p[4]
 
 
+# def p_expr_list(p):
+# 	'''EXPR : EXPR semi EXPR
+# 			| EXPR comma EXPR'''
+# 	p[0] = p[1] + p[3]
+
 def p_expr_list_comma(p):
 	'''EXPRLISTCOMMA : EXPRLISTCOMMA comma EXPR
 			| EXPR'''
@@ -506,10 +516,27 @@ def output_ast(tree, fname):
 	with open(fname, "a+b") as f:
 		f.write(output)
 
+
+
+# def output_list(acc, num_chillens, value):
+# 	acc += "{0}\n".format(num_chillens)
+# 	return acc
+
+# def output_class(acc, num_chillens, value, inherits=None):
+# 	output_identifer(f, value)
+# 	if inherits:
+# 		acc += "inherits \n"
+# 		output_identifer(acc, num_chillens, value[3])
+# 	else:
+# 		acc += "no_inherits \n"
+
 # Error rule for syntax errors
 def p_error(p):
 	if p is None:
+		# print "Error is None"
+		# print "Root: {}".format(ast.type)
 		pass
+		# exit()
 	else:
 		print "ERROR: {0}: Syntax Error".format(p.line_no)
 		exit()
@@ -529,11 +556,13 @@ def read_tokens_create_lexer(filename):
 			line_no = contents[index].rstrip()
 			token_type = contents[index+1].rstrip()
 			value = None
+			# print "{} in three_liners: {}".format(token_type, token_type in three_liners)
 			if token_type in three_liners:
 				value = contents[index+2].rstrip()
 				index += 3
 			else:
 				index += 2
+			# print("Adding Type: {}, LineNo: {}, Value:{}\n".format(token_type, line_no, value))
 			lexer_instance.add_token(token_type, line_no, value)
 		return lexer_instance
 
@@ -558,6 +587,13 @@ if __name__ == '__main__':
 		# print parser.productions
 
 		while True:
+			# try:
+			# 	s = raw_input('ply > ')
+			# except EOFError:
+			# 	break
+			# if not s: continue
 			result = parser.parse(lexer = lexer_instance)
 			output_ast(result, output_fname)
+			# print_tree(result, 0)
 			break
+			# print result
