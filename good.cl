@@ -3,9 +3,7 @@ class Main inherits IO {
     let
       stop : Int <- 500,
       i : Int <- 0,
-      done : Bool <- false,
-      matched : Bool <- false,
-      str : String <- "b"
+      done : Bool <- false
     in {
       out_string("Hello, world.\n");
 
@@ -23,10 +21,11 @@ class Main inherits IO {
       }
       fi;
 
+      -- case statements
       case str of
          a : String => matched <- false;
          b : String => matched <- true;
-      esac;
+      esac; 
 
       -- Binary ops
       i <- i + 550;

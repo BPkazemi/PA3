@@ -7,7 +7,11 @@ class Main inherits IO {
     in {
       out_string("Hello, world.\n");
 
+
+
       "" -- Problematic
+
+
 
       -- Binary ops
       i <- i + 550;
