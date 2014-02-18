@@ -9,7 +9,6 @@ precedence = (
     ('left', 'plus', 'minus'),
     ('left', 'times', 'divide'),
     ('left', 'let'),
-    # ('left', 'semi'),
     ('nonassoc', 'isvoid'),
     ('right', 'tilde'),
     ('nonassoc', 'at'),
