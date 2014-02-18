@@ -1,6 +1,5 @@
 import yacc
 import sys, os
-# import lexer
 
 precedence = (
 	('nonassoc', 'larrow'),
@@ -15,7 +14,10 @@ precedence = (
     ('nonassoc', 'dot')
 )
 
-########### Lexer #############
+#################################################
+#			         Lexer 
+#################################################
+
 class Token:
 	'''
 	The Token Class. Holds a type, line number, and value if necessary
@@ -65,7 +67,9 @@ class Lexer:
 			return elem
 
 
-########### AST  ##############
+###########################################
+#                AST  NODE
+###########################################
 class Node:
 	def __init__(self, type, children=None, leaf=None):
 		self.type = type
@@ -78,7 +82,13 @@ class Node:
 	def __repr__(self):
 		return "Type: {0}, num_children: {1}, value: {2}".format(self.type, len(self.children), self.leaf)
 
-########### Parser (token -> AST) #############
+
+
+#############################################
+#				Parser (token -> AST) 
+#############################################
+
+#### Grammar Definition ####
 
 def p_start(p):
 	'''START : PROGRAM'''
@@ -90,34 +100,28 @@ def p_program_one(p):
 	'''PROGRAM : PROGRAM CLASSDEF semi
 			| CLASSDEF semi'''
 	if len(p) == 4:
-		# p[0] = p[1] + p[2]
 		classes = p[1]
 		classes.append(p[2])
 		p[0] = classes
 	else:	
-		# p[0] = p[1]
 		p[0] = [p[1]]
 
 def p_class_def(p):
 	'''CLASSDEF : class type lbrace rbrace
 				| class type lbrace FEATURE semi rbrace'''
 	if len(p) == 5:
-		# p[0] = []
 		p[0] = Node("class_no_inherits", [], p[2])
 	else:
-		# p[0] = p[4]
 		p[0] = Node("class_no_inherits", p[4], p[2])
 
 def p_class_def_inherits(p):
 	'''CLASSDEF : class type inherits type lbrace rbrace
 				| class type inherits type lbrace FEATURE semi rbrace'''
 	if len(p) == 7:
-		# p[0] = []
 		value = p[2]
 		value = (value[0],value[1],value[2], p[4])
 		p[0] = Node("class_inherits", [], value)
 	else:
-		# p[0] = p[6]
 		value = p[2]
 		value = (value[0],value[1],value[2], p[4])
 		p[0] = Node("class_inherits", p[6], value)
@@ -127,20 +131,15 @@ def p_feature_helper(p):
 	'''FEATURE :  FEATURE semi FEATURELIT
 				| FEATURELIT'''
 	if len(p) == 4:
-		# p[0] = p[1] + p[3]
 		if p[1] and p[3]:
-			# print 'p1: {} and p3: {}'.format(p[1], p[3])
 			features = p[1]
 			features.append(p[3])
 			p[0] = features
 		elif p[1]:
-			# print 'p1: {}'.format(p[1])
 			p[0] = p[1]
 		elif p[3]:
-			# print 'p3: {}'.format(p[3])
 			p[0] = [p[3]]
 	else:
-		# p[0] = p[1]
 		p[0] = [p[1]]
 
 def p_feature(p):
@@ -149,16 +148,12 @@ def p_feature(p):
 				| identifier colon type
 				| identifier colon type larrow EXPR'''
 	if len(p) == 4:
-		# p[0] = []
 		p[0] = Node("attribute_no_init", [], (p[1], p[3]))
 	elif len(p) == 6:
-		# p[0] = p[5]
 		p[0] = Node("attribute_init", [p[5]], (p[1], p[3]))
 	elif len(p) == 9:
-		# p[0] = p[7]
 		p[0] = Node("method", [], {"formals": [], "expression": p[7], "identifier": p[1], "type": p[5]})
 	else:
-		# p[0] = p[3] + p[8]
 		formals = p[3]
 		expr = p[8]
 		p[0] = Node("method", formals, {"formals": formals, "expression": expr, "identifier": p[1], "type": p[6]})
@@ -167,41 +162,32 @@ def p_formal(p):
 	'''FORMAL : FORMAL comma FORMALLIT
 			| FORMALLIT'''
 	if len(p) == 4:
-		# p[0] = p[1] + p[3]
 		formals = p[1]
 		formals.append(p[3])
 		p[0] = formals
 	else:
-		# p[0] = p[1]
 		p[0] = [p[1]]
 
 def p_formal_lit(p):
 	'''FORMALLIT : identifier colon type'''
-	# p[0] = []
 	p[0] = Node("formal", [], (p[1], p[3]))
 
 def p_expr_case(p):
 	'''EXPR : case EXPR of CASEHELPER esac'''
-	# p[0] = p[2] + p[8]
-	# case_expr = Node("case_expression", [p[2]], "Case EXPR")
-	# children = [case_expr].extend(p[8])
 	p[0] = Node("case", p[4], (p[1], p[2]))
 
 def p_case_helper(p):
 	'''CASEHELPER : CASEHELPER CASELIT
 					| CASELIT'''
 	if len(p) == 3:
-		# p[0] = p[1] + p[2]
 		cases = p[1]
 		cases.append(p[2])
 		p[0] = cases
 	else:
-		# p[0] = p[1]
 		p[0] = [p[1]]
 
 def p_case_lit(p):
 	'''CASELIT : identifier colon type rarrow EXPR semi'''
-	# p[0] = p[5]
 	p[0] = Node("case_element", [p[5]], (p[1], p[3]))
 
 def p_expr_firsts(p):
@@ -211,22 +197,17 @@ def p_expr_firsts(p):
 		p[0] = Node("static_dispatch", [], {"expression": p[1], "method": p[5], "type": p[3], "lineno": p[2][2]})
 	else:
 		p[0] = Node("dynamic_dispatch", [], {"expression": p[1], "method": p[3], "lineno": p[2][2]})
-	# p[0] = p[1]
 
 def p_expr_at_dot(p):
 	'''EXPR : EXPR at type dot identifier lparen EXPRLISTCOMMA rparen
 			| EXPR dot identifier lparen EXPRLISTCOMMA rparen'''
 	if len(p) == 9:
-		# p[0] = p[1] + p[7]
-		expression = p[1]#Node("static_exp", [p[1]], "EXPR")
-		expression_list = p[7]#Node("static_params", p[7], "EXPR")
-		# children = [expression].extend(expression_list)
+		expression = p[1]
+		expression_list = p[7]
 		p[0] = Node("static_dispatch", expression_list, {"expression": expression, "method": p[5], "type": p[3], "lineno": p[2][2]})
 	else:
-		# p[0] = p[1] + p[5]
-		expression = p[1]#Node("dynamic_exp", [p[1]], "EXPR")
-		expression_list = p[5]#Node("dynamic_params", p[5], "EXPR")
-		# children = [expression].extend(expression_list)
+		expression = p[1]
+		expression_list = p[5]
 		p[0] = Node("dynamic_dispatch", expression_list, {"expression": expression, "method": p[3], "lineno": p[2][2]})
 
 
@@ -240,27 +221,19 @@ def p_expr_let(p):
 		binding_node = [Node("let_binding_no_init", [], {"identifier": p[2], "type": p[4]})]
 		binding_node.extend(p[5])
 		bindings = binding_node
-		# print "Bindings1: {}".format(bindings)
 		p[0] = Node("let_statement", [p[7]] , {"let":p[1], "bindings": bindings } )
-		# p[0] = p[5] + p[7]
 	elif len(p) == 10:
 		binding_node = [Node("let_binding_init", [p[6]], {"identifier": p[2], "type": p[4]})]
 		binding_node.extend(p[7])
 		bindings = binding_node
-		# print "Bindings2: {}".format(bindings)
 		let_binding_node = Node("let_statement", [p[9]], {"let": p[1], "bindings": bindings})
-		# p[0] = p[6] + p[7] + p[9]
 		p[0] = let_binding_node
 	elif len(p) == 7:
-		# p[0] = p[6]
 		binding_node = Node("let_binding_no_init", [], {"identifier": p[2], "type": p[4]})
-		# print "Bindings3: {}".format([binding_node])
 		let_statement_node = Node("let_statement", [p[6]], {"let": p[1], "bindings": [binding_node]})
 		p[0] = let_statement_node
 	else:
-		# p[0] = p[6] + p[8]
 		binding_node = Node("let_binding_init", [p[6]], {"identifier": p[2], "type": p[4]})
-		# print "Bindings4: {}".format([binding_node])
 		let_statement_node = Node("let_statement", [p[8]], {"let": p[1], "bindings": [binding_node]})
 		p[0] = let_statement_node
 
@@ -278,10 +251,8 @@ def p_let_lit(p):
 	'''LETHELPERLIT : identifier colon type
 			| identifier colon type larrow EXPR'''
 	if len(p) == 4:
-		# p[0] = []
 		p[0] = [Node("let_binding_no_init", [], {"identifier": p[1], "type": p[3]})]
 	else:
-		# p[0] = p[5]
 		p[0] = [Node("let_binding_init", [p[5]], {"identifier": p[1], "type": p[3]})]
 
 def p_expr_seconds(p):
@@ -303,7 +274,6 @@ def p_expr_id_call(p):
 
 def p_expr_assign(p):
 	'''EXPR : identifier larrow EXPR'''
-	# p[0] = p[3]
 	p[0] = Node("assign", [p[3]], p[1])
 
 
@@ -311,17 +281,10 @@ def p_expr_conditionals(p):
 	'''EXPR : if EXPR then EXPR else EXPR fi
 			| while EXPR loop EXPR pool'''
 	if len(p) == 8:
-		# p[0] = p[2] + p[4] + p[6]
-		# if_block = Node("if_block", [p[2]], "if")
-		# then_block = Node("then_block", [p[4]], "then")
-		# else_block = Node("else_block", [p[6]], "else")
 		p[0] = Node("if", [p[2], p[4], p[6]], p[1])
 	else:
-		# while_node = Node("while_block", [p[2]], "while")
-		# loop_node = Node("loop_block", [p[4]], "loop")
 		while_loop_node = Node("while", [p[2], p[4]], p[1])
 		p[0] = while_loop_node
-		# p[0] = p[2] + p[4]
 
 
 def p_expr_list_comma(p):
@@ -329,10 +292,10 @@ def p_expr_list_comma(p):
 			| EXPR'''
 	if len(p) == 4:
 		exprs = p[1]
-		exprs.append( p[3] ) #Node("expression", [p[3]], "EXPRLISTCOMMA comma EXPR"))
+		exprs.append( p[3] ) 
 		p[0] = exprs
 	else:
-		p[0] = [ p[1] ] #Node("expression", [p[1]], "EXPR")]
+		p[0] = [ p[1] ] 
 
 def p_expr_list_semi(p):
 	'''EXPRLISTSEMI : EXPRLISTSEMI semi EXPR
@@ -340,10 +303,10 @@ def p_expr_list_semi(p):
 	if len(p) == 4:
 		if p[1]:
 			exprs = p[1]
-			exprs.append( p[3] )#Node("express", [p[3]], "EXPRLISTSEMI semi EXPR"))
+			exprs.append( p[3] )
 			p[0] = exprs
 	else:
-		p[0] = [ p[1] ]# Node("expression", [p[1]], "EXPR")]
+		p[0] = [ p[1] ]
 
 
 def p_expr_doubles(p):
@@ -360,8 +323,6 @@ def p_expr_math(p):
 			| EXPR lt EXPR
 			| EXPR le EXPR
 			| EXPR equals EXPR'''
-	# p[0] = binary_ops[p[2]]((p[1], p[3]))
-	# p[0] = (p[1], p[2], p[3])
 	p[0] = Node(p[2][0], [p[1], p[3]], p[2])
 
 def p_expr_terminal(p):
@@ -371,13 +332,13 @@ def p_expr_terminal(p):
 			| true
 			| false
 			| new type'''
-	# p[0] = ast.Const(p[1])
 	if p[1][0] == "new":
 		p[0] = Node(p[1][0], [], (p[1], p[2]))
 	else:
 		p[0] = Node(p[1][0], [], p[1])
 	
 
+# Helper Function to printout AST representation
 def print_tree(tree, depth):
 	print "--"*depth, "Body: {0}".format(tree)
 	if not len(tree.children):
@@ -385,11 +346,17 @@ def print_tree(tree, depth):
 	for child in tree.children:
 		print_tree(child, depth+1)
 
+# global output string that is added to and written to at the
+# end of the recursively tree walking function
 output = ""
 
+# Helper function to print an entry formatted like an identifier
 def output_as_identifier(value):
 	return "{0}\n{1}\n".format(value[2], value[1])
 
+# Monster tree walking function that recursively makes a pre-traversal
+# of the ast and correctly formats each node and appends the text to
+# the global output string
 def recurse_tree(tree):
 	global output
 	if tree.type == "Program":
@@ -497,6 +464,8 @@ def recurse_tree(tree):
 	for elem in tree.children:
 		recurse_tree(elem)
 
+# Calls the recursive tree walking function and prints
+# output to a file when completed
 def output_ast(tree, fname):
 	global output
 	if os.path.exists(fname):
@@ -505,7 +474,7 @@ def output_ast(tree, fname):
 	with open(fname, "a+b") as f:
 		f.write(output)
 
-# Error rule for syntax errors
+# Error handling for syntax errors
 def p_error(p):
 	if p is None:
 		pass
@@ -513,6 +482,7 @@ def p_error(p):
 		print "ERROR: {0}: Syntax Error".format(p.line_no)
 		exit()
 
+# Manually add all tokens to our custom lexer class
 def read_tokens_create_lexer(filename):
 	if os.path.exists(filename):
 		three_liners = ("type", "identifier", "string", "integer")
@@ -541,6 +511,7 @@ def read_tokens_create_lexer(filename):
 		print "File Does Not Exist."
 		return None
 
+# Kick off the program and start the parser if a valid command line argument is given
 if __name__ == '__main__':
 	if len(sys.argv) != 2:
 		print "Please provide a .cl-lex file as the only argument."
