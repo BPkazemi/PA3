@@ -1,6 +1,6 @@
 #!/bin/bash
 
-./cool --lex hello-world.cl &&
-python main.py hello-world.cl-lex &&
-./cool --parse --out out  hello-world.cl-lex &&
-diff -b -B -E -w hello-world.cl-ast out.cl-ast
+./cool --lex good.cl &&
+python main.py good.cl-lex &&
+./cool --parse --out out  good.cl-lex &&
+diff -b -B -E -w good.cl-ast out.cl-ast

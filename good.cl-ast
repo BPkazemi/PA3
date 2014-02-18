@@ -1,7 +1,7 @@
 1
 1
 Main
-inherits
+inherits 
 1
 IO
 3
@@ -119,7 +119,7 @@ out_string
 27
 string
 Hello, again..\n
-attribute_init
+attribute_init 
 31
 test
 31

@@ -359,6 +359,8 @@ def output_as_identifier(value):
 # the global output string
 def recurse_tree(tree):
 	global output
+	if type(tree) == list:
+		tree = tree[0]
 	if tree.type == "Program":
 		# Output list of classes
 		output += "{0}\n".format(len(tree.children))
